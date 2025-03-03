@@ -1,7 +1,7 @@
 # Jitsi Slack Bolt - Jitsi Meet Integration for Slack
 
-This is a service that lets you add a /jitsi command to your Slack workspace to easily invite
-members to video conferences.
+This service provides the backend for a /jitsi command on your Slack workspace to easily invite
+members to video conferences. It is the service run in support of the TBD LINK app in the Slack Marketplace.
 
 Enables starting and joining [Jitsi Meet](https://meet.jit.si) meetings from within
 [Slack](https://slack.com/) channels and direct messages. It's also possible to configure a
@@ -36,12 +36,22 @@ rotation on. Not that we're speaking from experience or anything.
 
 ## Configuration
 
-TBD
+TBR
 
 ## Running
 
-For socket mode, `cp start-socket.sh start.sh`, for OAUTH mode, `cp start-oauth start.sh`.
-Then `poetry run ./start.sh`
+For dev we recommend the use of socket mode:
+
+```
+SLACK_EVENTS_API_MODE="socket" SLACK_BOT_TOKEN=<bot token> SLACK_APP_TOKEN=<app token> poetry run ./start.sh
+```
+
+For production you should use a container. In this case, `start.sh` expects `SLACK_SIGNING_SECRET`,
+`SLACK_CLIENT_ID`, and `SLACK_CLIENT_SECRET` to be set.
+
+## Building
+
+TBR
 
 ## License
 

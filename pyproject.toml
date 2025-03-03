@@ -1,0 +1,40 @@
+[project]
+name = "jitsi-slack-bolt"
+version = "0.0.1"
+description = ""
+authors = [
+    {name = "scott boone",email = "scott.e.boone@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "logging (>=0.4.9.6,<0.5.0.0)",
+    "slack-bolt (>=1.22.0,<2.0.0)"
+]
+
+[tool.black]
+line-length = 100
+target-version = ['py312', 'py313']
+include = '\.pyi?$'
+
+[tool.flake8]
+max-line-length = 100
+exclude = [
+  ".git",
+  "./tests/*",
+  "__pycache__",
+]
+max-complexity = 10
+
+[tool.poetry]
+packages = [{include = "jitsi_slack_bolt", from = "src"}]
+
+[tool.poetry.group.dev.dependencies]
+flake8 = "^7.1.2"
+black = "^25.1.0"
+pytest = "^8.3.4"
+flake8-pyproject = "^1.2.3"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"

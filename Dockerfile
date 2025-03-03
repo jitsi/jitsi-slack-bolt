@@ -17,7 +17,8 @@ RUN touch README.md && \
     rm -rf $POETRY_CACHE_DIR
 
 COPY src ./src
+COPY start.sh ./
 
 RUN poetry install --only main
 
-ENTRYPOINT ["poetry", "run", "start.sh"]
+ENTRYPOINT ["poetry", "run", "./start.sh"]

@@ -1,7 +1,5 @@
 build.sh
-lint.sh
 start.sh
-start-socket.sh
 
 .python-version
 __pycache__/

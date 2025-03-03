@@ -23,6 +23,7 @@ exclude = [
   ".git",
   "./tests/*",
   "__pycache__",
+  ".venv",
 ]
 max-complexity = 10
 

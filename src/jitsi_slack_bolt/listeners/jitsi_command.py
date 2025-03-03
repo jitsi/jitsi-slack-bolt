@@ -45,17 +45,17 @@ def slash_jitsi_server(command, respond):
 
     if len(decomp) == 1:
         respond(
-            "this should state the configured server for this workspace, or default server if there is none"
+            "TODO: this should state the configured server for this workspace, or default server if there is none"
         )
         return
 
     if len(decomp) == 2:
         if decomp[1] == "default":
-            respond("this will set the workspace server to default")
+            respond("TODO: this will set the workspace server to default")
             return
         else:
             # check to make sure this is a url, fall out if it is not one
-            respond(f"this will set the workspace server to {decomp[1]}")
+            respond(f"TODO: this will set the workspace server to {decomp[1]}")
             return
     respond("usage: /jitsi server [default|<server>]")
 

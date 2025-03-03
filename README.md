@@ -10,31 +10,29 @@ custom URL for your workspace and use that instead.
 This is a drop-in replacement for [jitsi-slack](https://github.com/jitsi/jitsi/slack)
 which is now deprecated because it does not support all modern Slack standards.
 
-## Getting Started
+## Local Development
 
-These instructions will get you started with the ability to run the project
-on your local machine for development purposes.
-
-### Prerequisites
-
-#### Python
-
-This project was developed using [python](https://python.org),
-[pyenv](https://github.com/pyenv/pyenv), and [poetry](https://python-poetry.org)
-
-As of this writing, it expects python 3.12.9. `poetry install` should install
-all required libraries.
-
-#### Slack
+### Slack
 
 This project is based on the Slack's Bolt library for Python which has an
 [excellent getting started guide](https://tools.slack.dev/bolt-python/getting-started/)
 
-You can follow this guide to set up your own Slack app. We recommend you begin in socket mode for
-development since it is easy to punch yourself in the face with OAUTH, especially if you turn
-rotation on. Not that we're speaking from experience or anything.
+If you want to run this service, you will need to follow the guide to set up your own Slack app. We
+recommend you begin in socket mode for development since it is easy to step on your own foot with
+OAUTH.
 
-## Configuration
+### Python
+
+This project is mostly in [python](https://python.org), leveraging the
+[Slack python sdk](https://tools.slack.dev/python-slack-sdk/) and the
+[Slack bolt sdk](https://tools.slack.dev/bolt-python/).
+
+Current development uses python 3.12.9.
+
+We manage dependencies using [poetry](https://python-poetry.org); `poetry install` should install
+all required libraries for development.
+
+### Configuration
 
 TBR
 

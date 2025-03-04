@@ -11,6 +11,8 @@ from slack_sdk.oauth.state_store import FileOAuthStateStore
 from listeners import register_listeners
 
 DEBUG_LEVEL = os.environ.get("DEBUG_LEVEL", "WARNING").upper()
+DATA_STORE_PROVIDER = os.environ.get("DATA_STORE_PROVIDER", "InMemoryStorageProvider")
+
 logging.basicConfig(level=DEBUG_LEVEL)
 
 

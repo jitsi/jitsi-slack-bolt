@@ -4,14 +4,16 @@ import os
 import logging
 from typing import Optional
 
+
 class StorageType(Enum):
     MEMORY = "memory"
     VAULT = "vault"
 
+
 @dataclass
 class JitsiConfiguration:
     """Configuration settings for Jitsi Slack integration."""
-    
+
     data_store_provider: StorageType
     debug_level: str
     default_server: str
@@ -40,11 +42,11 @@ class JitsiConfiguration:
             vault_url=os.environ.get("VAULT_URL"),
             vault_token=os.environ.get("VAULT_TOKEN"),
             vault_mount_point=os.environ.get("VAULT_MOUNT_POINT", "kv"),
-            vault_path_prefix=os.environ.get("VAULT_PATH_PREFIX", "jitsi-slack")
+            vault_path_prefix=os.environ.get("VAULT_PATH_PREFIX", "jitsi-slack"),
         )
-        
+
         if config.data_store_provider == StorageType.VAULT:
             if not config.vault_url or not config.vault_token:
                 raise ValueError("Vault URL and token are required when using Vault storage")
-        
+
         return config

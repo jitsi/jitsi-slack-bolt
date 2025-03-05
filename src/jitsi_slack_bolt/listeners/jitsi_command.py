@@ -25,7 +25,13 @@ from logging import Logger
 from slack_sdk import WebClient
 
 from jitsi_slack_bolt.util.store import WorkspaceStore
-from jitsi_slack_bolt.listeners.jitsi_handlers import slash_jitsi, slash_jitsi_server, slash_jitsi_dm
+from jitsi_slack_bolt.listeners.jitsi_handlers import (
+    slash_jitsi,
+    slash_jitsi_server,
+    slash_jitsi_dm,
+    slash_jitsi_help,
+)
+
 
 def jitsi_callback(
     ack: Ack,
@@ -42,5 +48,7 @@ def jitsi_callback(
         slash_jitsi_server(command, logger, respond, workspace_store, default_server)
     elif command["text"].startswith("@"):
         slash_jitsi_dm(client, command, logger, respond, workspace_store, default_server)
+    elif command["text"].startswith("help"):
+        slash_jitsi_help(respond)
     else:
         slash_jitsi(command, logger, respond, workspace_store, default_server)

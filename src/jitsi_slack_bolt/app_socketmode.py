@@ -8,6 +8,7 @@ from util.store import InMemoryStorageProvider, WorkspaceStore
 from util.vault import VaultStorageProvider
 from util.config import JitsiConfiguration, StorageType
 
+
 class JitsiSlackApp:
     def __init__(self):
         # Load configuration from environment
@@ -27,12 +28,14 @@ class JitsiSlackApp:
         if self.config.data_store_provider == StorageType.MEMORY:
             self.workspace_store.set_provider(InMemoryStorageProvider())
         elif self.config.data_store_provider == StorageType.VAULT:
-            self.workspace_store.set_provider(VaultStorageProvider(
-                url=self.config.vault_url,
-                token=self.config.vault_token,
-                mount_point=self.config.vault_mount_point,
-                path_prefix=self.config.vault_path_prefix
-            ))
+            self.workspace_store.set_provider(
+                VaultStorageProvider(
+                    url=self.config.vault_url,
+                    token=self.config.vault_token,
+                    mount_point=self.config.vault_mount_point,
+                    path_prefix=self.config.vault_path_prefix,
+                )
+            )
 
         self.workspace_store.set_workspace_server_url("default", self.config.default_server)
 

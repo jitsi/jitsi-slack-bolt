@@ -34,7 +34,24 @@ all required libraries for development.
 
 ### Configuration
 
-TBR
+The following environment variables configure the service:
+
+- `SLACK_BOT_TOKEN`: The bot token for your Slack app (required)
+- `SLACK_APP_TOKEN`: The app-level token for your Slack app (required for socket mode)
+- `SLACK_SIGNING_SECRET`: The signing secret for your Slack app (required for events API)
+- `SLACK_CLIENT_ID`: OAuth client ID (required for OAuth flow)
+- `SLACK_CLIENT_SECRET`: OAuth client secret (required for OAuth flow)
+- `SLACK_EVENTS_API_MODE`: Set to "socket" for socket mode, otherwise uses events API
+- `SLASH_CMD`: The slash command to use for the service (defaults to /jitsi)
+- `JITSI_URL`: Base URL for Jitsi Meet instance (defaults to meet.jit.si)
+- `DATA_STORE_PROVIDER`: memory or vault
+- `VAULT_URL`
+- `VAULT_TOKEN`
+- `VAULT_MOUNT_POINT`
+- `VAULT_PATH_PREFIX`
+- `PORT`: Port to listen on (default: 3000)
+- `DEBUG`: Set to true for debug logging
+
 
 ## Running
 

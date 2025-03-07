@@ -22,7 +22,7 @@ class JitsiSlackApp:
 
         # initialize the bolt app with a bot token and socket mode handler
         self.bolt_app = BoltApp(token=os.environ.get("SLACK_BOT_TOKEN"))
-        register_listeners(self.bolt_app, self.workspace_store, self.config.default_server)
+        register_listeners(self.bolt_app, self.workspace_store, self.config.default_server, self.config.slash_cmd)
 
         # initializes the app's data storage provider
         if self.config.data_store_provider == StorageType.MEMORY:

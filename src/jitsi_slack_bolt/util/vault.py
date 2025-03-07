@@ -2,6 +2,10 @@ from typing import Optional
 import hvac
 from .store import StorageProvider
 
+# take a primary vault and backup vault
+# always write to both
+# read from first  and read from second if connection doesn't work
+# collect metrics on all of this
 
 class VaultStorageProvider(StorageProvider):
     """Hashicorp Vault-based storage provider."""

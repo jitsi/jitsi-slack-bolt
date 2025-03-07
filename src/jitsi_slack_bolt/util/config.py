@@ -17,10 +17,12 @@ class JitsiConfiguration:
     data_store_provider: StorageType
     debug_level: str
     default_server: str
+    slash_cmd: str
     vault_url: Optional[str] = None
+    vault_url_fallback: Optional[str] = None
     vault_token: Optional[str] = None
-    vault_mount_point: str = "kv"
-    vault_path_prefix: str = "jitsi-slack"
+    vault_mount_point: Optional[str] = "kv"
+    vault_path_prefix: Optional[str] = "jitsi-slack"
 
     @classmethod
     def from_env(cls) -> "JitsiConfiguration":
@@ -39,7 +41,9 @@ class JitsiConfiguration:
             data_store_provider=provider,
             debug_level=debug_level,
             default_server=os.environ.get("JITSI_DEFAULT_SERVER", "https://meet.jit.si/"),
+            slash_cmd=os.environ.get("SLASH_CMD", "/jitsi"),
             vault_url=os.environ.get("VAULT_URL"),
+            vault_url_fallback=os.environ.get("VAULT_URL_FALLBACK"),
             vault_token=os.environ.get("VAULT_TOKEN"),
             vault_mount_point=os.environ.get("VAULT_MOUNT_POINT", "kv"),
             vault_path_prefix=os.environ.get("VAULT_PATH_PREFIX", "jitsi-slack"),

@@ -27,7 +27,7 @@ class JitsiConfiguration:
     @classmethod
     def from_env(cls) -> "JitsiConfiguration":
         """Create configuration from environment variables."""
-        provider_str = os.environ.get("DATA_STORE_PROVIDER", "memory").lower()
+        provider_str = os.environ.get("STORAGE_PROVIDER", "memory").lower()
         try:
             provider = StorageType(provider_str)
         except ValueError:
@@ -41,7 +41,7 @@ class JitsiConfiguration:
             data_store_provider=provider,
             debug_level=debug_level,
             default_server=os.environ.get("JITSI_DEFAULT_SERVER", "https://meet.jit.si/"),
-            slash_cmd=os.environ.get("SLASH_CMD", "/jitsi"),
+            slash_cmd=os.environ.get("SLACK_SLASH_CMD", "/jitsi"),
             vault_url=os.environ.get("VAULT_URL"),
             vault_url_fallback=os.environ.get("VAULT_URL_FALLBACK"),
             vault_token=os.environ.get("VAULT_TOKEN"),

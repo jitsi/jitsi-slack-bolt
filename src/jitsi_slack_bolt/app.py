@@ -1,17 +1,29 @@
 import os
 import logging
 
-from slack_bolt import App as BoltApp
+from slack_bolt import App as BoltApp, BoltResponse
 from slack_bolt.adapter.socket_mode import SocketModeHandler
+from slack_bolt.oauth.callback_options import CallbackOptions, SuccessArgs, FailureArgs
+from slack_bolt.oauth.oauth_settings import OAuthSettings
 
 from slack_sdk.oauth.installation_store import FileInstallationStore
-from slack_sdk.oauth.oauth_settings import OAuthSettings
+from slack_sdk.oauth.state_store import FileOAuthStateStore
 
 from listeners import register_listeners
 from util.store import InMemoryStorageProvider, WorkspaceStore
 from util.vault import VaultStorageProvider
 from util.config import JitsiConfiguration, StorageType
 from util.slack_store import WorkspaceInstallationStore
+
+
+def success(args: SuccessArgs) -> BoltResponse:
+    # Do anything here ...
+    # Call the default handler to return HTTP response
+    return args.default.success(args)
+    # return BoltResponse(status=200, body="Thanks!")
+
+def failure(args: FailureArgs) -> BoltResponse:
+    return BoltResponse(status=args.suggested_status_code, body=args.reason)
 
 
 class JitsiSlackApp:
@@ -33,14 +45,14 @@ class JitsiSlackApp:
         elif self.config.slack_app_mode == "oauth":
             self.bolt_app = BoltApp(
                 signing_secret=os.environ.get("SLACK_SIGNING_SECRET"),
-                installation_store = WorkspaceInstallationStore(self.workspace_store)
+                installation_store=WorkspaceInstallationStore(self.workspace_store),
                 oauth_settings=OAuthSettings(
                     client_id=os.environ.get("SLACK_CLIENT_ID"),
                     client_secret=os.environ.get("SLACK_CLIENT_SECRET"),
                     scopes=["chat:write", "commands", "im:write", "mpim:write", "users:read"],
                     user_scopes=[],
                     redirect_uri=None,
-                    state_store=FileOauthStateStore(expiration_seconds=600),
+                    state_store=FileOAuthStateStore(expiration_seconds=600),
                     callback_options=CallbackOptions(success=success, failure=failure),
                 )
             )

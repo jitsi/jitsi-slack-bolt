@@ -6,6 +6,14 @@ from typing import Optional
 from .store import WorkspaceStore
 
 class WorkspaceInstallationStore(InstallationStore):
+    @property
+    def logger(self):
+        return self._logger
+
+    @logger.setter
+    def logger(self, new_logger):
+        self._logger = new_logger
+
     def __init__(self, workspace_store: WorkspaceStore):
         self.store = workspace_store
         self.logger = logging.getLogger(__name__)

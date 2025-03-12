@@ -17,6 +17,7 @@ class JitsiConfiguration:
     data_store_provider: StorageType
     debug_level: str
     default_server: str
+    slack_app_mode: str
     slash_cmd: str
     vault_url: Optional[str] = None
     vault_url_fallback: Optional[str] = None
@@ -41,8 +42,8 @@ class JitsiConfiguration:
             data_store_provider=provider,
             debug_level=debug_level,
             default_server=os.environ.get("JITSI_DEFAULT_SERVER", "https://meet.jit.si/"),
+            slack_app_mode=os.environ.get("SLACK_EVENTS_API_MODE", "socket"),
             slash_cmd=os.environ.get("SLACK_SLASH_CMD", "/jitsi"),
-            slack_app_mode=os.environ.get("SLACK_APP_MODE", "socket"),
             vault_url=os.environ.get("VAULT_URL"),
             vault_url_fallback=os.environ.get("VAULT_URL_FALLBACK"),
             vault_token=os.environ.get("VAULT_TOKEN"),

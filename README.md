@@ -42,9 +42,9 @@ The following environment variables configure the service:
 - `SLACK_CLIENT_ID`: OAuth client ID (required for OAuth flow)
 - `SLACK_CLIENT_SECRET`: OAuth client secret (required for OAuth flow)
 - `SLACK_EVENTS_API_MODE`: Set to "socket" for socket mode, otherwise uses events API
-- `SLASH_CMD`: The slash command to use for the service (defaults to /jitsi)
+- `SLACK_SLASH_CMD`: The slash command to use for the service (defaults to /jitsi)
+- `STORAGE_PROVIDER`: memory or vault
 - `JITSI_URL`: Base URL for Jitsi Meet instance (defaults to meet.jit.si)
-- `DATA_STORE_PROVIDER`: memory or vault
 - `VAULT_URL`
 - `VAULT_TOKEN`
 - `VAULT_MOUNT_POINT`

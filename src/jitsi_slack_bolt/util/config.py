@@ -42,6 +42,7 @@ class JitsiConfiguration:
             debug_level=debug_level,
             default_server=os.environ.get("JITSI_DEFAULT_SERVER", "https://meet.jit.si/"),
             slash_cmd=os.environ.get("SLACK_SLASH_CMD", "/jitsi"),
+            slack_app_mode=os.environ.get("SLACK_APP_MODE", "socket"),
             vault_url=os.environ.get("VAULT_URL"),
             vault_url_fallback=os.environ.get("VAULT_URL_FALLBACK"),
             vault_token=os.environ.get("VAULT_TOKEN"),

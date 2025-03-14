@@ -33,4 +33,6 @@ else
     exit 1
 fi
 
-python3 ./src/jitsi_slack_bolt/app.py
+#python3 ./src/jitsi_slack_bolt/app.py
+cd src/jitsi_slack_bolt
+gunicorn -b :3000 -w 1 --reload app:app

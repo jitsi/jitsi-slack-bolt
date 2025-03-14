@@ -22,13 +22,17 @@ class WorkspaceInstallationStore(InstallationStore):
         self.store.set_workspace_oauth(installation.team_id, installation.bot_token)
         self.logger.info(f"Installation saved: {installation}")
 
-    def find_installation(self, team_id: Optional[str]) -> Optional[Installation]:
-        if not team_id:
-            self.logger.warning("find_installation called with no team_id")
-            return None
-        token = self.store.get_workspace_oauth(team_id)
+    def find_installation(self, *, enterprise_id: Optional[str], team_id: Optional[str], user_id: Optional[str] = None, is_enterprise_install: Optional[bool] = False) -> Optional[Installation]:
+        lookup_id = ""
+        if is_enterprise_install:
+            self.logger.warning("find_installation called with is_enterprise_install")
+            lookup_id = enterprise_id
+        else:
+            lookup_id = team_id
+        token = self.store.get_workspace_oauth(lookup_id)
         if token:
             installation = Installation(
+                user_id=user_id,
                 team_id=team_id,
                 bot_token=token
             )

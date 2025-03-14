@@ -21,7 +21,4 @@ COPY start.sh ./
 
 RUN poetry install --only main
 
-#ENTRYPOINT ["poetry", "run", "./start.sh"]
-#ENTRYPOINT ["tail", "-f", "/dev/null"]
-
-ENTRYPOINT ["poetry", "run", "gunicorn", "--bind", ":3000", "--workers", "2", "--threads", "2", "--timeout", "0", "app:main"]
+ENTRYPOINT ["poetry", "run", "./start.sh"]

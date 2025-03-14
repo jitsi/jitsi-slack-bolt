@@ -25,6 +25,7 @@ def success(args: SuccessArgs) -> BoltResponse:
     return args.default.success(args)
     # return BoltResponse(status=200, body="Thanks!")
 
+
 def failure(args: FailureArgs) -> BoltResponse:
     return BoltResponse(status=args.suggested_status_code, body=args.reason)
 
@@ -40,7 +41,9 @@ class JitsiSlackApp:
         self.logger.info("starting jitsi-slack")
 
         # initialize workspace store
-        self.logger.info(f"initializing workspace store with default server: {self.config.default_server}")
+        self.logger.info(
+            f"initializing workspace store with default server: {self.config.default_server}"
+        )
         self.workspace_store = WorkspaceStore()
         self.workspace_store.set_workspace_server_url("default", self.config.default_server)
 
@@ -58,9 +61,9 @@ class JitsiSlackApp:
                     user_scopes=[],
                     redirect_uri=None,
                     state_store=WorkspaceInstallationStore(self.workspace_store),
-                    state_validation_enabled=False, # TODO: seems needed for install from link?
+                    state_validation_enabled=False,  # TODO: seems needed for install from link?
                     callback_options=CallbackOptions(success=success, failure=failure),
-                )
+                ),
             )
 
         @self.bolt_app.middleware
@@ -69,7 +72,9 @@ class JitsiSlackApp:
             return next()
 
         self.logger.info(f"registering bolt listeners for {self.config.slash_cmd}")
-        register_listeners(self.bolt_app, self.workspace_store, self.config.default_server, self.config.slash_cmd)
+        register_listeners(
+            self.bolt_app, self.workspace_store, self.config.default_server, self.config.slash_cmd
+        )
 
         if self.config.slack_app_mode == "oauth":
             self.init_flask_app()
@@ -91,7 +96,7 @@ class JitsiSlackApp:
         else:
             raise ValueError(f"Invalid storage provider: {self.config.data_store_provider}")
 
-        self.logger.info ("jitsi-slack is ready to go!")
+        self.logger.info("jitsi-slack is ready to go!")
 
     def init_flask_app(self):
         self.logger.info("setting up flask")
@@ -126,9 +131,10 @@ class JitsiSlackApp:
             SocketModeHandler(self.bolt_app, os.environ["SLACK_APP_TOKEN"]).start()
         elif self.config.slack_app_mode == "oauth":
             self.flask_app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 3000)))
-            #self.bolt_app.start(3000)
+            # self.bolt_app.start(3000)
         else:
             raise ValueError(f"Invalid Slack app mode: {self.config.slack_app_mode}")
+
 
 jitsi_slack_app = JitsiSlackApp()
 if jitsi_slack_app.config.slack_app_mode == "oauth":

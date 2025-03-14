@@ -7,6 +7,7 @@ from .store import StorageProvider
 # read from first  and read from second if connection doesn't work
 # collect metrics on all of this
 
+
 class VaultStorageProvider(StorageProvider):
     """Hashicorp Vault-based storage provider."""
 

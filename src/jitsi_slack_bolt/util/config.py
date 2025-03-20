@@ -8,6 +8,7 @@ from typing import Optional
 class StorageType(Enum):
     MEMORY = "memory"
     VAULT = "vault"
+    POSTGRES = "postgres"
 
 
 @dataclass
@@ -24,6 +25,12 @@ class JitsiConfiguration:
     vault_token: Optional[str] = None
     vault_mount_point: Optional[str] = "kv"
     vault_path_prefix: Optional[str] = "jitsi-slack"
+    db_host: Optional[str] = None
+    db_ip: Optional[str] = None
+    db_port: Optional[str] = None
+    db_username: Optional[str] = None
+    db_password: Optional[str] = None
+    db_name: Optional[str] = "jitsi-slack"
 
     @classmethod
     def from_env(cls) -> "JitsiConfiguration":
@@ -44,15 +51,33 @@ class JitsiConfiguration:
             default_server=os.environ.get("JITSI_DEFAULT_SERVER", "https://meet.jit.si/"),
             slack_app_mode=os.environ.get("SLACK_EVENTS_API_MODE", "socket"),
             slash_cmd=os.environ.get("SLACK_SLASH_CMD", "/jitsi"),
-            vault_url=os.environ.get("VAULT_URL"),
-            vault_url_fallback=os.environ.get("VAULT_URL_FALLBACK"),
-            vault_token=os.environ.get("VAULT_TOKEN"),
+            vault_url=os.environ.get("VAULT_URL", None),
+            vault_url_fallback=os.environ.get("VAULT_URL_FALLBACK", None),
+            vault_token=os.environ.get("VAULT_TOKEN", None),
             vault_mount_point=os.environ.get("VAULT_MOUNT_POINT", "kv"),
             vault_path_prefix=os.environ.get("VAULT_PATH_PREFIX", "jitsi-slack"),
+            db_host=os.environ.get("DB_HOST", None),
+            db_ip=os.environ.get("DB_IP", None),
+            db_port=os.environ.get("DB_PORT", None),
+            db_username=os.environ.get("DB_USERNAME", None),
+            db_password=os.environ.get("DB_PASSWORD", None),
+            db_name=os.environ.get("DB_NAME", "jitsi-slack"),
         )
 
         if config.data_store_provider == StorageType.VAULT:
             if not config.vault_url or not config.vault_token:
                 raise ValueError("Vault URL and token are required when using Vault storage")
+
+        if config.data_store_provider == StorageType.POSTGRES:
+            if not config.db_host or not config.db_ip:
+                raise ValueError("Postgres host or IP is required when using Postgres storage")
+            if not config.db_port:
+                raise ValueError("Postgres port is required when using Postgres storage")
+            if not config.db_username:
+                raise ValueError("Postgres username is required when using Postgres storage")
+            if not config.db_password:
+                raise ValueError("Postgres password is required when using Postgres storage")
+            if not config.db_name:
+                raise ValueError("Postgres database name is required when using Postgres storage")
 
         return config

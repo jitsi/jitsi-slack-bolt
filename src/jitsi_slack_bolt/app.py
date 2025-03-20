@@ -17,6 +17,7 @@ from util.store import InMemoryStorageProvider, WorkspaceStore
 from util.vault import VaultStorageProvider
 from util.config import JitsiConfiguration, StorageType
 from util.slack_store import WorkspaceInstallationStore
+from util.postgres import PostgresStorageProvider
 
 
 def success(args: SuccessArgs) -> BoltResponse:
@@ -57,7 +58,7 @@ class JitsiSlackApp:
                 oauth_settings=OAuthSettings(
                     client_id=os.environ.get("SLACK_CLIENT_ID"),
                     client_secret=os.environ.get("SLACK_CLIENT_SECRET"),
-                    scopes=["chat:write", "commands", "im:write", "mpim:write", "users:read"],
+                    scopes=["chat:write", "commands", "im:write", "users:read"],
                     user_scopes=[],
                     redirect_uri=None,
                     state_store=WorkspaceInstallationStore(self.workspace_store),
@@ -68,8 +69,18 @@ class JitsiSlackApp:
 
         @self.bolt_app.middleware
         def log_request(logger, body, next):
-            logger.info(body)
+            logger.debug(body)
             return next()
+
+        @self.bolt_app.event("app_uninstalled")
+        def handle_app_uninstalled(event, logger):
+            logger.info(f"App uninstalled from workspace {event['team_id']}")
+            self.workspace_store.delete_workspace(event["team_id"])
+
+        @self.bolt_app.event("tokens_revoked")
+        def handle_tokens_revoked(event, logger):
+            logger.info(f"Tokens revoked for workspace {event['team_id']}")
+            self.workspace_store.delete_workspace(event["team_id"])
 
         self.logger.info(f"registering bolt listeners for {self.config.slash_cmd}")
         register_listeners(
@@ -93,6 +104,18 @@ class JitsiSlackApp:
                     path_prefix=self.config.vault_path_prefix,
                 )
             )
+        elif self.config.data_store_provider == StorageType.POSTGRES:
+            self.logger.info("initializing postgres storage provider")
+            self.workspace_store.set_provider(
+                PostgresStorageProvider(
+                    host=self.config.db_host,
+                    ip=self.config.db_ip,
+                    port=self.config.db_port,
+                    username=self.config.db_username,
+                    password=self.config.db_password,
+                    database_name=self.config.db_name,
+                )
+            )
         else:
             raise ValueError(f"Invalid storage provider: {self.config.data_store_provider}")
 
@@ -105,17 +128,18 @@ class JitsiSlackApp:
 
         @self.flask_app.route("/slack/events", methods=["POST"])
         def slack_events():
+            self.logger.info(f"received event {request}")
             return self.flask_handler.handle(request)
 
         # TODO: does this actually get called or does it go through oauth_redirect?
         @self.flask_app.route("/slack/install", methods=["GET"])
         def install():
-            self.logger.debug(f"received install {request}")
+            self.logger.info(f"received install {request}")
             return self.flask_handler.handle(request)
 
         @self.flask_app.route("/slack/oauth_redirect", methods=["GET"])
         def oauth_redirect():
-            self.logger.debug(f"received oauth redirect {request}")
+            self.logger.info(f"received oauth redirect {request}")
             return self.flask_handler.handle(request)
 
         @self.flask_app.route("/health", methods=["GET"])

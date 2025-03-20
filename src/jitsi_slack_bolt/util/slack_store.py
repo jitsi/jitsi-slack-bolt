@@ -21,7 +21,7 @@ class WorkspaceInstallationStore(InstallationStore):
 
     def save(self, installation: Installation) -> None:
         self.store.set_workspace_oauth(installation.team_id, installation.bot_token)
-        self.logger.info(f"Installation saved: {installation}")
+        self.logger.debug(f"Installation saved: {installation}")
 
     def find_installation(
         self,
@@ -40,7 +40,7 @@ class WorkspaceInstallationStore(InstallationStore):
         token = self.store.get_workspace_oauth(lookup_id)
         if token:
             installation = Installation(user_id=user_id, team_id=team_id, bot_token=token)
-            self.logger.info(f"Installation found: {installation}")
+            self.logger.debug(f"Installation found: {installation}")
             return installation
         self.logger.info(f"Installation not found for team_id: {team_id}")
         return None

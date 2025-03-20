@@ -21,6 +21,11 @@ class StorageProvider(ABC):
     def set_server_url(self, workspace_id: str, server_url: str) -> None:
         pass
 
+    @abstractmethod
+    def delete_workspace(self, workspace_id: str) -> None:
+        """Delete all data for a workspace."""
+        pass
+
 
 class InMemoryStorageProvider(StorageProvider):
     """Default in-memory storage provider."""
@@ -40,6 +45,11 @@ class InMemoryStorageProvider(StorageProvider):
 
     def set_server_url(self, workspace_id: str, server_url: str) -> None:
         self._server_urls[workspace_id] = server_url.rstrip("/")
+
+    def delete_workspace(self, workspace_id: str) -> None:
+        """Delete all data for a workspace."""
+        self._oauth_tokens.pop(workspace_id, None)
+        self._server_urls.pop(workspace_id, None)
 
 
 class WorkspaceStore:
@@ -67,3 +77,7 @@ class WorkspaceStore:
     def set_workspace_server_url(self, workspace_id: str, server_url: str) -> None:
         """Set Jitsi server URL for a workspace."""
         self._provider.set_server_url(workspace_id, server_url)
+
+    def delete_workspace(self, workspace_id: str) -> None:
+        """Delete all data for a workspace."""
+        self._provider.delete_workspace(workspace_id)

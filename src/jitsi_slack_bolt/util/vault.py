@@ -73,3 +73,14 @@ class VaultStorageProvider(StorageProvider):
     def set_server_url(self, workspace_id: str, server_url: str) -> None:
         """Set Jitsi server URL for a workspace."""
         self._set_secret(workspace_id, "server_url", server_url.rstrip("/"))
+
+    def delete_workspace(self, workspace_id: str) -> None:
+        """Delete all data for a workspace."""
+        try:
+            path = f"{self.path_prefix}/{workspace_id}"
+            self.client.secrets.kv.v2.delete_metadata_and_all_versions(
+                path=path,
+                mount_point=self.mount_point
+            )
+        except hvac.exceptions.VaultError:
+            pass  # Ignore errors if secret doesn't exist

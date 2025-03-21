@@ -37,6 +37,8 @@ else
     exit 1
 fi
 
+export PROMETHEUS_MULTIPROC_DIR=/tmp
+
 cd src/jitsi_slack_bolt
 
 if [ -n "$DEBUG_LEVEL" ] && [ "$DEBUG_LEVEL" = "debug" ]; then

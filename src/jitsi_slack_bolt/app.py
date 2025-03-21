@@ -74,13 +74,19 @@ class JitsiSlackApp:
 
         @self.bolt_app.event("app_uninstalled")
         def handle_app_uninstalled(event, logger):
-            logger.info(f"App uninstalled from workspace {event['team_id']}")
-            self.workspace_store.delete_workspace(event["team_id"])
+            if 'team_id' not in event:
+                logger.warn(f"app_uninstalled event missing team_id: {event}")
+            else:
+                logger.info(f"App uninstalled from workspace {event['team_id']}")
+                self.workspace_store.delete_workspace(event["team_id"])
 
         @self.bolt_app.event("tokens_revoked")
         def handle_tokens_revoked(event, logger):
-            logger.info(f"Tokens revoked for workspace {event['team_id']}")
-            self.workspace_store.delete_workspace(event["team_id"])
+            if 'team_id' not in event:
+                logger.warn(f"tokens_revoked event missing team_id: {event}")
+            else:
+                logger.info(f"Tokens revoked for workspace {event['team_id']}")
+                self.workspace_store.delete_workspace(event["team_id"])
 
         self.logger.info(f"registering bolt listeners for {self.config.slash_cmd}")
         register_listeners(

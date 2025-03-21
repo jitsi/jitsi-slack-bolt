@@ -20,6 +20,11 @@ from util.config import when_ready, child_exit
 from util.slack_store import WorkspaceInstallationStore
 from util.postgres import PostgresStorageProvider
 
+def success(args: SuccessArgs) -> BoltResponse:
+    return args.default.success(args)
+
+def failure(args: FailureArgs) -> BoltResponse:
+    return BoltResponse(status=args.suggested_status_code, body=args.reason)
 
 class JitsiSlackApp:
     def __init__(self):

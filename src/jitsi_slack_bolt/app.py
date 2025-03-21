@@ -4,6 +4,8 @@ import logging
 from flask import Flask, request
 from werkzeug.middleware.proxy_fix import ProxyFix
 
+from prometheus_flask_exporter import PrometheusMetrics
+
 from slack_bolt import App as BoltApp, BoltResponse
 from slack_bolt.adapter.flask import SlackRequestHandler
 from slack_bolt.adapter.socket_mode import SocketModeHandler
@@ -128,6 +130,8 @@ class JitsiSlackApp:
         self.flask_app = Flask(__name__)
         self.flask_handler = SlackRequestHandler(self.bolt_app)
 
+        self.metrics = PrometheusMetrics(self.flask_app)
+
         @self.flask_app.route("/slack/events", methods=["POST"])
         def slack_events():
             self.logger.info(f"received event {request}")
@@ -145,6 +149,7 @@ class JitsiSlackApp:
             return self.flask_handler.handle(request)
 
         @self.flask_app.route("/health", methods=["GET"])
+        @self.metrics.do_not_track()
         def health():
             self.logger.debug("health check")
             return "OK"

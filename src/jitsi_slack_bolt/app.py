@@ -2,6 +2,7 @@ import os
 import logging
 
 from flask import Flask, request
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 from slack_bolt import App as BoltApp, BoltResponse
 from slack_bolt.adapter.flask import SlackRequestHandler
@@ -147,6 +148,11 @@ class JitsiSlackApp:
         def health():
             self.logger.debug("health check")
             return "OK"
+
+        if self.config.proxy_mode == "true":
+            self.flask_app.wsgi_app = ProxyFix(
+                self.flask_app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1
+            )
 
     def get_flask_app(self):
         return self.flask_app

@@ -55,6 +55,7 @@ The following environment variables configure the service:
 * `SLACK_SLASH_CMD`: The slash command to call the service in Slack (defaults to /jitsi)
 * `STORAGE_PROVIDER`: "memory", "vault", or "postgres"
 * `PORT`: port that gunicorn listens on (default: 3000)
+* `PROXY_MODE`: the app is running behind a proxy
 * `DEBUG_LEVEL`: error, warn, info, or debug (default: info)
 
 #### socket mode

@@ -20,8 +20,8 @@ class JitsiConfiguration:
     default_server: str
     slack_app_mode: str
     slash_cmd: str
+    proxy_mode: Optional[str]
     vault_url: Optional[str] = None
-    vault_url_fallback: Optional[str] = None
     vault_token: Optional[str] = None
     vault_mount_point: Optional[str] = "kv"
     vault_path_prefix: Optional[str] = "jitsi-slack"
@@ -51,6 +51,7 @@ class JitsiConfiguration:
             default_server=os.environ.get("JITSI_DEFAULT_SERVER", "https://meet.jit.si/"),
             slack_app_mode=os.environ.get("SLACK_EVENTS_API_MODE", "socket"),
             slash_cmd=os.environ.get("SLACK_SLASH_CMD", "/jitsi"),
+            proxy_mode=os.environ.get("PROXY_MODE", "false"),
             vault_url=os.environ.get("VAULT_URL", None),
             vault_token=os.environ.get("VAULT_TOKEN", None),
             vault_mount_point=os.environ.get("VAULT_MOUNT_POINT", "kv"),

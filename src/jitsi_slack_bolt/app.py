@@ -18,7 +18,6 @@ from listeners import register_listeners
 from util.store import InMemoryStorageProvider, WorkspaceStore
 from util.vault import VaultStorageProvider
 from util.config import JitsiConfiguration, StorageType
-from util.config import when_ready, child_exit
 from util.slack_store import WorkspaceInstallationStore
 from util.postgres import PostgresStorageProvider
 
@@ -136,7 +135,7 @@ class JitsiSlackApp:
         self.logger.info("setting up flask")
         self.flask_app = Flask(__name__)
         self.flask_handler = SlackRequestHandler(self.bolt_app)
-        self.metrics = GunicornPrometheusMetrics(self.flask_app)
+        self.metrics = GunicornPrometheusMetrics(app=self.flask_app)
 
         @self.flask_app.route("/slack/events", methods=["POST"])
         def slack_events():

@@ -134,18 +134,18 @@ class JitsiSlackApp:
 
         @self.flask_app.route("/slack/events", methods=["POST"])
         def slack_events():
-            self.logger.info(f"received event {request}")
+            self.logger.debug(f"received event {request}")
             return self.flask_handler.handle(request)
 
         # TODO: does this actually get called or does it go through oauth_redirect?
         @self.flask_app.route("/slack/install", methods=["GET"])
         def install():
-            self.logger.info(f"received install {request}")
+            self.logger.debug(f"received install {request}")
             return self.flask_handler.handle(request)
 
         @self.flask_app.route("/slack/oauth_redirect", methods=["GET"])
         def oauth_redirect():
-            self.logger.info(f"received oauth redirect {request}")
+            self.logger.debug(f"received oauth redirect {request}")
             return self.flask_handler.handle(request)
 
         @self.flask_app.route("/health", methods=["GET"])

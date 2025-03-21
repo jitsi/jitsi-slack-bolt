@@ -52,7 +52,6 @@ class JitsiConfiguration:
             slack_app_mode=os.environ.get("SLACK_EVENTS_API_MODE", "socket"),
             slash_cmd=os.environ.get("SLACK_SLASH_CMD", "/jitsi"),
             vault_url=os.environ.get("VAULT_URL", None),
-            vault_url_fallback=os.environ.get("VAULT_URL_FALLBACK", None),
             vault_token=os.environ.get("VAULT_TOKEN", None),
             vault_mount_point=os.environ.get("VAULT_MOUNT_POINT", "kv"),
             vault_path_prefix=os.environ.get("VAULT_PATH_PREFIX", "jitsi-slack"),

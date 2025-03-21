@@ -1,5 +1,3 @@
-build.sh
-
 .python-version
 __pycache__/
 *.pyc

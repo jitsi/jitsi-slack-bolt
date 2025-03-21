@@ -9,9 +9,6 @@ from slack_bolt.adapter.socket_mode import SocketModeHandler
 from slack_bolt.oauth.callback_options import CallbackOptions, SuccessArgs, FailureArgs
 from slack_bolt.oauth.oauth_settings import OAuthSettings
 
-from slack_sdk.oauth.installation_store import FileInstallationStore
-from slack_sdk.oauth.state_store import FileOAuthStateStore
-
 from listeners import register_listeners
 from util.store import InMemoryStorageProvider, WorkspaceStore
 from util.vault import VaultStorageProvider
@@ -36,12 +33,10 @@ class JitsiSlackApp:
         # load configuration from environment
         self.config = JitsiConfiguration.from_env()
 
-        # set up logging
         logging.basicConfig(level=getattr(logging, self.config.debug_level))
         self.logger = logging.getLogger("jitsi-slack")
         self.logger.info("starting jitsi-slack")
 
-        # initialize workspace store
         self.logger.info(
             f"initializing workspace store with default server: {self.config.default_server}"
         )
@@ -74,7 +69,7 @@ class JitsiSlackApp:
 
         @self.bolt_app.event("app_uninstalled")
         def handle_app_uninstalled(event, logger):
-            if 'team_id' not in event:
+            if "team_id" not in event:
                 logger.warn(f"app_uninstalled event missing team_id: {event}")
             else:
                 logger.info(f"App uninstalled from workspace {event['team_id']}")
@@ -82,7 +77,7 @@ class JitsiSlackApp:
 
         @self.bolt_app.event("tokens_revoked")
         def handle_tokens_revoked(event, logger):
-            if 'team_id' not in event:
+            if "team_id" not in event:
                 logger.warn(f"tokens_revoked event missing team_id: {event}")
             else:
                 logger.info(f"Tokens revoked for workspace {event['team_id']}")

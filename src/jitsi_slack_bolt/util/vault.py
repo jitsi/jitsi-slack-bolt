@@ -79,8 +79,7 @@ class VaultStorageProvider(StorageProvider):
         try:
             path = f"{self.path_prefix}/{workspace_id}"
             self.client.secrets.kv.v2.delete_metadata_and_all_versions(
-                path=path,
-                mount_point=self.mount_point
+                path=path, mount_point=self.mount_point
             )
         except hvac.exceptions.VaultError:
             pass  # Ignore errors if secret doesn't exist

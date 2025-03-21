@@ -22,11 +22,21 @@ from util.config import when_ready, child_exit
 from util.slack_store import WorkspaceInstallationStore
 from util.postgres import PostgresStorageProvider
 
+# bolt callbacks
 def success(args: SuccessArgs) -> BoltResponse:
     return args.default.success(args)
 
 def failure(args: FailureArgs) -> BoltResponse:
     return BoltResponse(status=args.suggested_status_code, body=args.reason)
+
+from prometheus_flask_exporter.multiprocess import GunicornPrometheusMetrics
+
+# gunicorn callbacks
+def when_ready(server):
+    GunicornPrometheusMetrics.start_http_server_when_ready(8000)
+
+def child_exit(server, worker):
+    GunicornPrometheusMetrics.mark_process_dead_on_child_exit(worker.pid) 
 
 class JitsiSlackApp:
     def __init__(self):
@@ -174,8 +184,4 @@ if jitsi_slack_app.config.slack_app_mode == "oauth":
 
 
 if __name__ == "__main__":
-    options = {
-        'when_ready': when_ready,
-        'child_exit': child_exit
-    }
     jitsi_slack_app.start()

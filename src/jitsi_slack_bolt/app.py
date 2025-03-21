@@ -4,31 +4,21 @@ import logging
 from flask import Flask, request
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-from prometheus_flask_exporter import PrometheusMetrics
+from prometheus_flask_exporter.multiprocess import GunicornPrometheusMetrics
 
-from slack_bolt import App as BoltApp, BoltResponse
+from slack_bolt import App as BoltApp
 from slack_bolt.adapter.flask import SlackRequestHandler
 from slack_bolt.adapter.socket_mode import SocketModeHandler
-from slack_bolt.oauth.callback_options import CallbackOptions, SuccessArgs, FailureArgs
+from slack_bolt.oauth.callback_options import CallbackOptions
 from slack_bolt.oauth.oauth_settings import OAuthSettings
 
 from listeners import register_listeners
 from util.store import InMemoryStorageProvider, WorkspaceStore
 from util.vault import VaultStorageProvider
 from util.config import JitsiConfiguration, StorageType
+from util.config import when_ready, child_exit
 from util.slack_store import WorkspaceInstallationStore
 from util.postgres import PostgresStorageProvider
-
-
-def success(args: SuccessArgs) -> BoltResponse:
-    # Do anything here ...
-    # Call the default handler to return HTTP response
-    return args.default.success(args)
-    # return BoltResponse(status=200, body="Thanks!")
-
-
-def failure(args: FailureArgs) -> BoltResponse:
-    return BoltResponse(status=args.suggested_status_code, body=args.reason)
 
 
 class JitsiSlackApp:
@@ -129,8 +119,7 @@ class JitsiSlackApp:
         self.logger.info("setting up flask")
         self.flask_app = Flask(__name__)
         self.flask_handler = SlackRequestHandler(self.bolt_app)
-
-        self.metrics = PrometheusMetrics(self.flask_app)
+        self.metrics = GunicornPrometheusMetrics(self.flask_app)
 
         @self.flask_app.route("/slack/events", methods=["POST"])
         def slack_events():
@@ -176,6 +165,10 @@ jitsi_slack_app = JitsiSlackApp()
 if jitsi_slack_app.config.slack_app_mode == "oauth":
     app = jitsi_slack_app.get_flask_app()
 
-# dev mode
+
 if __name__ == "__main__":
+    options = {
+        'when_ready': when_ready,
+        'child_exit': child_exit
+    }
     jitsi_slack_app.start()

@@ -4,6 +4,10 @@ if [ -z "$SLACK_EVENTS_API_MODE" ]; then
     SLACK_EVENTS_API_MODE="socket"
 fi
 
+if [ -z "$PORT" ]; then
+    PORT=3000
+fi
+
 if [ "$SLACK_EVENTS_API_MODE" = "socket" ]; then
     if [ -z "$SLACK_BOT_TOKEN" ]; then
         echo "ERROR: SLACK_BOT_TOKEN must be set for socket mode"
@@ -36,7 +40,7 @@ fi
 cd src/jitsi_slack_bolt
 
 if [ -n "$DEBUG_LEVEL" ] && [ "$DEBUG_LEVEL" = "debug" ]; then
-    gunicorn -b :3000 -w 1 --reload app:app
+    gunicorn -b :$PORT -w 2 --reload app:app
 else
-    gunicorn -b :3000 -w 1 app:app
+    gunicorn -b :$PORT -w 2 --reload app:app
 fi

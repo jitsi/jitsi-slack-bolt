@@ -4,6 +4,15 @@ import os
 import logging
 from typing import Optional
 
+from prometheus_flask_exporter.multiprocess import GunicornPrometheusMetrics
+
+def when_ready(server):
+    GunicornPrometheusMetrics.start_http_server_when_ready(8000)
+
+def child_exit(server, worker):
+    GunicornPrometheusMetrics.mark_process_dead_on_child_exit(worker.pid) 
+
+
 
 class StorageType(Enum):
     MEMORY = "memory"
@@ -20,6 +29,7 @@ class JitsiConfiguration:
     default_server: str
     slack_app_mode: str
     slash_cmd: str
+    metrics_port: str
     proxy_mode: Optional[str]
     vault_url: Optional[str] = None
     vault_token: Optional[str] = None
@@ -51,6 +61,7 @@ class JitsiConfiguration:
             default_server=os.environ.get("JITSI_DEFAULT_SERVER", "https://meet.jit.si/"),
             slack_app_mode=os.environ.get("SLACK_EVENTS_API_MODE", "socket"),
             slash_cmd=os.environ.get("SLACK_SLASH_CMD", "/jitsi"),
+            metrics_port=os.environ.get("METRICS_PORT", "8000"),
             proxy_mode=os.environ.get("PROXY_MODE", "false"),
             vault_url=os.environ.get("VAULT_URL", None),
             vault_token=os.environ.get("VAULT_TOKEN", None),

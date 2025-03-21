@@ -1,6 +1,5 @@
 FROM python:3.12.9-alpine
 
-# install poetry
 RUN pip install poetry==2.1.1
 
 ENV POETRY_NO_INTERACTION=1 \

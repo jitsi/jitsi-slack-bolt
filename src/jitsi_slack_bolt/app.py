@@ -28,14 +28,6 @@ def success(args: SuccessArgs) -> BoltResponse:
 def failure(args: FailureArgs) -> BoltResponse:
     return BoltResponse(status=args.suggested_status_code, body=args.reason)
 
-from prometheus_flask_exporter.multiprocess import GunicornPrometheusMetrics
-
-# gunicorn callbacks
-def when_ready(server):
-    GunicornPrometheusMetrics.start_http_server_when_ready(8000)
-
-def child_exit(server, worker):
-    GunicornPrometheusMetrics.mark_process_dead_on_child_exit(worker.pid) 
 
 class JitsiSlackApp:
     def __init__(self):
@@ -164,6 +156,9 @@ class JitsiSlackApp:
                 self.flask_app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1
             )
 
+    def logger(self):
+        return self.logger
+
     def get_flask_app(self):
         return self.flask_app
 
@@ -181,6 +176,14 @@ jitsi_slack_app = JitsiSlackApp()
 if jitsi_slack_app.config.slack_app_mode == "oauth":
     app = jitsi_slack_app.get_flask_app()
 
+# gunicorn callbacks
+def when_ready(server):
+    jitsi_slack_app.logger().info("gunicorn server ready")
+    GunicornPrometheusMetrics.start_http_server_when_ready(8000)
+
+def child_exit(server, worker):
+    jitsi_slack_app.logger().info("gunicorn worker exit")
+    GunicornPrometheusMetrics.mark_process_dead_on_child_exit(worker.pid) 
 
 if __name__ == "__main__":
     jitsi_slack_app.start()

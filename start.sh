@@ -1,11 +1,15 @@
 #!/usr/bin/env sh
 
 if [ -z "$SLACK_EVENTS_API_MODE" ]; then
-    SLACK_EVENTS_API_MODE="socket"
+    export SLACK_EVENTS_API_MODE="socket"
 fi
 
 if [ -z "$PORT" ]; then
-    PORT=3000
+    export PORT=3000
+fi
+
+if [ -z "$METRICS_PORT" ]; then
+    export METRICS_PORT=8080
 fi
 
 if [ "$SLACK_EVENTS_API_MODE" = "socket" ]; then
@@ -42,7 +46,7 @@ export PROMETHEUS_MULTIPROC_DIR=/tmp
 cd src/jitsi_slack_bolt
 
 if [ -n "$DEBUG_LEVEL" ] && [ "$DEBUG_LEVEL" = "debug" ]; then
-    gunicorn -b :$PORT -w 2 --reload app:app
+    gunicorn --config guincorn-config.py --reload app:app
 else
-    gunicorn -b :$PORT -w 2 --reload app:app
+    gunicorn --config gunicorn-config.py app:app
 fi

@@ -103,7 +103,7 @@ def slash_jitsi_server(
             parsed_url = urlparse(decomp[1])
             if not parsed_url.scheme or not parsed_url.netloc:
                 respond(
-                    f"Invalid format for a server URL. {parsed_url} must include scheme (e.g., https://) and hostname"
+                    f"Invalid format for a server URL - must include scheme (e.g., https://) and hostname"
                 )
                 return
             url = urljoin(decomp[1], "/")

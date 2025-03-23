@@ -51,7 +51,7 @@ class JitsiConfiguration:
             default_server=os.environ.get("JITSI_DEFAULT_SERVER", "https://meet.jit.si"),
             slack_app_mode=os.environ.get("SLACK_EVENTS_API_MODE", "socket"),
             slash_cmd=os.environ.get("SLACK_SLASH_CMD", "/jitsi"),
-            metrics_port=os.environ.get("METRICS_PORT", "8000"),
+            metrics_port=os.environ.get("METRICS_PORT", "8080"),
             proxy_mode=os.environ.get("PROXY_MODE", "false"),
             vault_url=os.environ.get("VAULT_URL", None),
             vault_token=os.environ.get("VAULT_TOKEN", None),

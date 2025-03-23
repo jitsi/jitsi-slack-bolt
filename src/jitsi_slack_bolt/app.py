@@ -35,7 +35,7 @@ metrics_port = os.environ.get("METRICS_PORT", "8080")
 # gunicorn callbacks
 def when_ready(server):
     gunicorn_logger.info("gunicorn server ready")
-    GunicornPrometheusMetrics.start_http_server_when_ready(8000)
+    GunicornPrometheusMetrics.start_http_server_when_ready(int(metrics_port))
 
 def child_exit(server, worker):
     gunicorn_logger.info("gunicorn worker exit")

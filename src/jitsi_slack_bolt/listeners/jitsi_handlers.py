@@ -40,30 +40,28 @@ def build_room_url(
 
 
 def build_join_message_blocks(message: str, room_url: str) -> list[dict[str, any]]:
-    blocks=[
+    blocks = [
         {
             "type": "section",
             "text": {
                 "type": "plain_text",
                 "text": f"{message}",
-            }
+            },
         },
         {
             "type": "actions",
             "elements": [
                 {
                     "type": "button",
-                    "text": {
-                        "type": "plain_text",
-                        "text": "Join"
-                    },
+                    "text": {"type": "plain_text", "text": "Join"},
                     "style": "primary",
-                    "value": f"{room_url}"
+                    "value": f"{room_url}",
                 }
-            ]
-        }
+            ],
+        },
     ]
     return blocks
+
 
 def slash_jitsi(
     command: dict[str, any],
@@ -103,7 +101,7 @@ def slash_jitsi_server(
             parsed_url = urlparse(decomp[1])
             if not parsed_url.scheme or not parsed_url.netloc:
                 respond(
-                    f"Invalid format for a server URL - must include scheme (e.g., https://) and hostname"
+                    "Invalid format for a server URL - must include scheme (e.g., https://) and hostname"
                 )
                 return
             url = urljoin(decomp[1], "/")
@@ -150,19 +148,28 @@ def slash_jitsi_dm(
 
         try:
             room_url = build_room_url(command, workspace_store, default_server)
-            msg_blocks = build_join_message_blocks(f"<@{command['user_name']}> would like you to join a Jitsi meeting at : {room_url}", room_url)
+            msg_blocks = build_join_message_blocks(
+                f"<@{command['user_name']}> would like you to join a Jitsi meeting at : {room_url}",
+                room_url,
+            )
             resp = client.chat_postMessage(channel=resp["channel"]["id"], blocks=msg_blocks)
 
         except SlackApiError as e:
             logger.error(e)
             respond("Error sending message, please try again.")
             return
-    
+
     formatted_usernames = ", ".join(f"<{username}>" for username in usernames_to_dm)
     if len(usernames_to_dm) > 2:
-      formatted_usernames = formatted_usernames.rpartition(' ')[0] + ' and ' + formatted_usernames.rpartition(' ')[2]
+        formatted_usernames = (
+            formatted_usernames.rpartition(" ")[0]
+            + " and "
+            + formatted_usernames.rpartition(" ")[2]
+        )
 
-    msg_blocks = build_join_message_blocks(f"A Jitsi meeting request has been sent to {formatted_usernames} at {room_url}", room_url)
+    msg_blocks = build_join_message_blocks(
+        f"A Jitsi meeting request has been sent to {formatted_usernames} at {room_url}", room_url
+    )
     respond(blocks=msg_blocks)
 
 
@@ -174,15 +181,15 @@ def slash_jitsi_help(respond: Respond, default_server: str):
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": "Welcome to the /jitsi bot! Here's what you can do:"
-                }
+                    "text": "Welcome to the /jitsi bot! Here's what you can do:",
+                },
             },
             {
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": f"• `/jitsi` creates a new conference link in the current channel\n•`/jitsi [@user1 @user2 ...]` sends direct messages to user1 and user2 to join a new conference.\n•`/jitsi server default` will set the server used for conferences to the default ({default_server}).\n•`/jitsi server https://foo.com/` will set the server used for conferences to https://foo.com/. You can use this to point this bot at your own jitsi server."
-                }
-            }
+                    "text": f"• `/jitsi` creates a new conference link in the current channel\n•`/jitsi [@user1 @user2 ...]` sends direct messages to user1 and user2 to join a new conference.\n•`/jitsi server default` will set the server used for conferences to the default ({default_server}).\n•`/jitsi server https://foo.com/` will set the server used for conferences to https://foo.com/. You can use this to point this bot at your own jitsi server.",
+                },
+            },
         ]
     )

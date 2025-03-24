@@ -21,25 +21,31 @@ from util.config import JitsiConfiguration, StorageType
 from util.slack_store import WorkspaceInstallationStore
 from util.postgres import PostgresStorageProvider
 
+
 # bolt callbacks
 def success(args: SuccessArgs) -> BoltResponse:
     return args.default.success(args)
 
+
 def failure(args: FailureArgs) -> BoltResponse:
     return BoltResponse(status=args.suggested_status_code, body=args.reason)
+
 
 gunicorn_logger = logging.getLogger("gunicorn")
 
 metrics_port = os.environ.get("METRICS_PORT", "8080")
+
 
 # gunicorn callbacks
 def when_ready(server):
     gunicorn_logger.info("gunicorn server ready")
     GunicornPrometheusMetrics.start_http_server_when_ready(int(metrics_port))
 
+
 def child_exit(server, worker):
     gunicorn_logger.info("gunicorn worker exit")
     GunicornPrometheusMetrics.mark_process_dead_on_child_exit(worker.pid)
+
 
 class JitsiSlackApp:
     def __init__(self):

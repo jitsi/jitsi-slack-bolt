@@ -4,6 +4,7 @@ import os
 import logging
 from typing import Optional
 
+
 class StorageType(Enum):
     MEMORY = "memory"
     VAULT = "vault"
@@ -71,14 +72,14 @@ class JitsiConfiguration:
 
         if config.data_store_provider == StorageType.POSTGRES:
             if not config.db_host or not config.db_ip:
-                raise ValueError("Postgres host or IP is required when using Postgres storage")
+                raise ValueError("DB_HOST or DB_IP is required when using Postgres storage")
             if not config.db_port:
-                raise ValueError("Postgres port is required when using Postgres storage")
+                raise ValueError("DB_PORT is required when using Postgres storage")
             if not config.db_username:
-                raise ValueError("Postgres username is required when using Postgres storage")
+                raise ValueError("DB_USERNAME is required when using Postgres storage")
             if not config.db_password:
-                raise ValueError("Postgres password is required when using Postgres storage")
+                raise ValueError("DB_PASSWORD is required when using Postgres storage")
             if not config.db_name:
-                raise ValueError("Postgres database name is required when using Postgres storage")
+                raise ValueError("DB_NAME is required when using Postgres storage")
 
         return config

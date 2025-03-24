@@ -38,7 +38,7 @@ metrics_port = os.environ.get("METRICS_PORT", "8080")
 
 # gunicorn callbacks
 def when_ready(server):
-    gunicorn_logger.info("gunicorn server ready")
+    gunicorn_logger.info(f"primary gunicorn server ready, starting metrics server on port {metrics_port}")
     GunicornPrometheusMetrics.start_http_server_when_ready(int(metrics_port))
 
 
@@ -59,7 +59,37 @@ class JitsiSlackApp:
         self.logger.info(
             f"initializing workspace store with default server: {self.config.default_server}"
         )
+
         self.workspace_store = WorkspaceStore()
+
+        if self.config.data_store_provider == StorageType.MEMORY:
+            self.logger.info("initializing memory storage provider")
+            self.workspace_store.set_provider(InMemoryStorageProvider())
+        elif self.config.data_store_provider == StorageType.VAULT:
+            self.logger.info("initializing vault storage provider")
+            self.workspace_store.set_provider(
+                VaultStorageProvider(
+                    url=self.config.vault_url,
+                    token=self.config.vault_token,
+                    mount_point=self.config.vault_mount_point,
+                    path_prefix=self.config.vault_path_prefix,
+                )
+            )
+        elif self.config.data_store_provider == StorageType.POSTGRES:
+            self.logger.info("initializing postgres storage provider")
+            self.workspace_store.set_provider(
+                PostgresStorageProvider(
+                    host=self.config.db_host,
+                    ip=self.config.db_ip,
+                    port=self.config.db_port,
+                    username=self.config.db_username,
+                    password=self.config.db_password,
+                    database_name=self.config.db_name,
+                )
+            )
+        else:
+            raise ValueError(f"Invalid storage provider: {self.config.data_store_provider}")
+
         self.workspace_store.set_workspace_server_url("default", self.config.default_server)
 
         self.logger.info(f"initializing bolt app in {self.config.slack_app_mode} mode")
@@ -104,40 +134,11 @@ class JitsiSlackApp:
 
         self.logger.info(f"registering bolt listeners for {self.config.slash_cmd}")
         register_listeners(
-            self.bolt_app, self.workspace_store, self.config.default_server, self.config.slash_cmd
+            self.bolt_app, self.workspace_store, self.config.slash_cmd
         )
 
         if self.config.slack_app_mode == "oauth":
             self.init_flask_app()
-
-        # initializes the app's data storage provider
-        if self.config.data_store_provider == StorageType.MEMORY:
-            self.logger.info("initializing memory storage provider")
-            self.workspace_store.set_provider(InMemoryStorageProvider())
-        elif self.config.data_store_provider == StorageType.VAULT:
-            self.logger.info("initializing vault storage provider")
-            self.workspace_store.set_provider(
-                VaultStorageProvider(
-                    url=self.config.vault_url,
-                    token=self.config.vault_token,
-                    mount_point=self.config.vault_mount_point,
-                    path_prefix=self.config.vault_path_prefix,
-                )
-            )
-        elif self.config.data_store_provider == StorageType.POSTGRES:
-            self.logger.info("initializing postgres storage provider")
-            self.workspace_store.set_provider(
-                PostgresStorageProvider(
-                    host=self.config.db_host,
-                    ip=self.config.db_ip,
-                    port=self.config.db_port,
-                    username=self.config.db_username,
-                    password=self.config.db_password,
-                    database_name=self.config.db_name,
-                )
-            )
-        else:
-            raise ValueError(f"Invalid storage provider: {self.config.data_store_provider}")
 
         self.logger.info("jitsi-slack is ready to go!")
 

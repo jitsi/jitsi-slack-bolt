@@ -70,9 +70,9 @@ class WorkspaceStore:
         """Store OAuth token for a workspace."""
         self._provider.set_oauth(workspace_id, oauth_token)
 
-    def get_workspace_server_url(self, workspace_id: str, default_server: str) -> str:
+    def get_workspace_server_url(self, workspace_id: str) -> str:
         """Get Jitsi server URL for a workspace."""
-        return self._provider.get_server_url(workspace_id) or default_server
+        return self._provider.get_server_url(workspace_id) or self._provider.get_server_url("default")
 
     def set_workspace_server_url(self, workspace_id: str, server_url: str) -> None:
         """Set Jitsi server URL for a workspace."""

@@ -45,10 +45,10 @@ def jitsi_callback(
     ack()
 
     if command["text"].startswith("server"):
-        slash_jitsi_server(command, logger, respond, workspace_store, default_server)
+        slash_jitsi_server(command, logger, respond, workspace_store)
     elif command["text"].startswith("@"):
-        slash_jitsi_dm(client, command, logger, respond, workspace_store, default_server)
+        slash_jitsi_dm(client, command, logger, respond, workspace_store)
     elif command["text"].startswith("help"):
-        slash_jitsi_help(respond, default_server)
+        slash_jitsi_help(respond)
     else:
-        slash_jitsi(command, logger, respond, workspace_store, default_server)
+        slash_jitsi(command, logger, respond, workspace_store)

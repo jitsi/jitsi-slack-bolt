@@ -36,7 +36,7 @@ def build_room_url(
     server_url = workspace_store.get_workspace_server_url(command["team_id"]) or workspace_store.get_workspace_server_url(command["default"])
     room_name = generate_room_name()
     room_url = f"{server_url}/{room_name}"
-    return f"{room_url}"
+    return server_url, room_url
 
 
 def build_join_message_blocks(message: str, room_url: str) -> list[dict[str, any]]:
@@ -53,7 +53,7 @@ def build_join_message_blocks(message: str, room_url: str) -> list[dict[str, any
             "elements": [
                 {
                     "type": "button",
-                    "text": {"type": "plain_text", "text": "Join"},
+                    "text": {"type": "plain_text", "text": "Click to Join"},
                     "style": "primary",
                     "url": f"{room_url}",
                     "action_id": "join_button",
@@ -72,8 +72,12 @@ def slash_jitsi(
 ):
     """base slash command that creates a randomly generated Jitsi room name in the server's path"""
 
-    room_url = build_room_url(command, workspace_store)
-    msg_blocks = build_join_message_blocks(f"A Jitsi meeting has started at {room_url}", room_url)
+    logger.info(f"Creating Jitsi room for team {command['team_id']}")
+    logger.info(f"{workspace_store}")
+    logger.info(f"Server URL: {workspace_store.get_workspace_server_url(command['team_id'])}")
+
+    server_url, room_url = build_room_url(command, workspace_store)
+    msg_blocks = build_join_message_blocks(f"A Jitsi meeting has started at {server_url}", room_url)
     respond(blocks=msg_blocks, response_type="in_channel")
 
 
@@ -146,9 +150,9 @@ def slash_jitsi_dm(
             return
 
         try:
-            room_url = build_room_url(command, workspace_store)
+            server_url, room_url = build_room_url(command, workspace_store)
             msg_blocks = build_join_message_blocks(
-                f"<@{command['user_name']}> would like you to join a Jitsi meeting at : {room_url}",
+                f"<@{command['user_name']}> would like you to join a Jitsi meeting at : {server_url}",
                 room_url,
             )
             resp = client.chat_postMessage(channel=resp["channel"]["id"], blocks=msg_blocks)

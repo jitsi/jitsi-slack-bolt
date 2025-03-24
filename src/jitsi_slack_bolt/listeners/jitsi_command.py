@@ -37,7 +37,6 @@ def jitsi_callback(
     ack: Ack,
     client: WebClient,
     command: dict[str, any],
-    default_server: str,
     logger: Logger,
     respond: Respond,
     workspace_store: WorkspaceStore,

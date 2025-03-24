@@ -30,10 +30,10 @@ from jitsi_slack_bolt.util.room_name import generate_room_name
 from urllib.parse import urlparse, urljoin
 
 
-def build_room_url(
-    command: dict[str, any], workspace_store: WorkspaceStore 
-) -> str:
-    server_url = workspace_store.get_workspace_server_url(command["team_id"]) or workspace_store.get_workspace_server_url(command["default"])
+def build_room_url(command: dict[str, any], workspace_store: WorkspaceStore) -> str:
+    server_url = workspace_store.get_workspace_server_url(
+        command["team_id"]
+    ) or workspace_store.get_workspace_server_url(command["default"])
     room_name = generate_room_name()
     room_url = f"{server_url}/{room_name}"
     return server_url, room_url
@@ -155,8 +155,11 @@ def slash_jitsi_dm(
                 f"<@{command['user_name']}> would like you to join a Jitsi meeting at : {server_url}",
                 room_url,
             )
-            resp = client.chat_postMessage(channel=resp["channel"]["id"], blocks=msg_blocks)
-
+            resp = client.chat_postMessage(
+                channel=resp["channel"]["id"],
+                blocks=msg_blocks,
+                text=f"Join a meeting at {room_url}",
+            )
         except SlackApiError as e:
             logger.error(e)
             respond("Error sending message, please try again.")

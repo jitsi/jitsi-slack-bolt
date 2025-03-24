@@ -72,7 +72,9 @@ class WorkspaceStore:
 
     def get_workspace_server_url(self, workspace_id: str) -> str:
         """Get Jitsi server URL for a workspace."""
-        return self._provider.get_server_url(workspace_id) or self._provider.get_server_url("default")
+        return self._provider.get_server_url(workspace_id) or self._provider.get_server_url(
+            "default"
+        )
 
     def set_workspace_server_url(self, workspace_id: str, server_url: str) -> None:
         """Set Jitsi server URL for a workspace."""

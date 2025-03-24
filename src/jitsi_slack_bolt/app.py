@@ -38,7 +38,9 @@ metrics_port = os.environ.get("METRICS_PORT", "8080")
 
 # gunicorn callbacks
 def when_ready(server):
-    gunicorn_logger.info(f"primary gunicorn server ready, starting metrics server on port {metrics_port}")
+    gunicorn_logger.info(
+        f"primary gunicorn server ready, starting metrics server on port {metrics_port}"
+    )
     GunicornPrometheusMetrics.start_http_server_when_ready(int(metrics_port))
 
 
@@ -133,9 +135,7 @@ class JitsiSlackApp:
                 self.workspace_store.delete_workspace(event["team_id"])
 
         self.logger.info(f"registering bolt listeners for {self.config.slash_cmd}")
-        register_listeners(
-            self.bolt_app, self.workspace_store, self.config.slash_cmd
-        )
+        register_listeners(self.bolt_app, self.workspace_store, self.config.slash_cmd)
 
         if self.config.slack_app_mode == "oauth":
             self.init_flask_app()

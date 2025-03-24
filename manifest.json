@@ -1,48 +1,52 @@
 {
-    "display_information": {
-        "name": "Jitsi Meet Beta",
-        "description": "Video conferences, desktop sharing, YouTube streaming and more!",
-        "background_color": "#1d61c9",
-        "long_description": "Jitsi Meet is an OpenSource (Apache License)  application that provides large scale video conferences for your browser or your mobile. Just click the link and you are in!\r\n\r\nThis integration adds the /jitsi slash command for your team so that you can start a video conference in your channel, making it easy for everyone to jump right on the call. Just type /jitsi into your channel and a conference link will be provided in the channel. Additionally, you can send direct messages to users by mentioning their username in the command.\r\n\r\nIn addition to simple video calls Jitsi Meet also lets you join over the phone, stream to YouTube and collaboratively edit documents. for long description placeholder for long description placeholder for long description placeholder for long description placeholder for long description"
+  "display_information": {
+    "name": "Jitsi Meet Beta",
+    "description": "Video conferences, desktop sharing, YouTube streaming and more!",
+    "background_color": "#1d61c9",
+    "long_description": "Jitsi Meet is an OpenSource (Apache License) application that provides large scale video conferences for your browser or your mobile. Just click the link and you are in!\r\n\r\nThis integration adds the /jitsi slash command for your team so that you can start a video conference in your channel, making it easy for everyone to jump right on the call. Just type /jitsi into your channel and a conference link will be provided in the channel. Additionally, you can send direct messages to users by mentioning their username in the command.\r\n\r\nIn addition to simple video calls Jitsi Meet also lets you join over the phone, stream to YouTube and collaboratively edit documents. for long description placeholder for long description placeholder for long description placeholder for long description placeholder for long description"
+  },
+  "features": {
+    "bot_user": {
+      "display_name": "Jitsi Meet Beta",
+      "always_online": false
     },
-    "features": {
-        "bot_user": {
-            "display_name": "Jitsi Meet Beta",
-            "always_online": false
-        },
-        "slash_commands": [
-            {
-                "command": "/jitsi-beta",
-                "url": "https://beta-meet-jit-si-us-ashburn-1-api.jitsi.net/jitsi-slack/slack/events",
-                "description": "launch a jitsi meet conference",
-                "usage_hint": "[help] [server] [@user]",
-                "should_escape": false
-            }
-        ]
-    },
-    "oauth_config": {
-        "redirect_urls": [
-            "https://beta-meet-jit-si-api.jitsi.net/jitsi-slack/slack/oauth_redirect"
-        ],
-        "scopes": {
-            "bot": [
-                "chat:write",
-                "commands",
-                "im:write",
-                "users:read"
-            ]
-        }
-    },
-    "settings": {
-        "event_subscriptions": {
-            "request_url": "https://beta-meet-jit-si-api.jitsi.net/jitsi-slack/slack/events",
-            "bot_events": [
-                "app_uninstalled",
-                "tokens_revoked"
-            ]
-        },
-        "org_deploy_enabled": false,
-        "socket_mode_enabled": false,
-        "token_rotation_enabled": false
+    "slash_commands": [
+      {
+        "command": "/jitsi-beta",
+        "url": "https://beta-meet-jit-si-us-ashburn-1-api.jitsi.net/jitsi-slack/slack/events",
+        "description": "launch a jitsi meet conference",
+        "usage_hint": "[help] [server] [@user]",
+        "should_escape": false
+      }
+    ]
+  },
+  "oauth_config": {
+    "redirect_urls": [
+      "https://beta-meet-jit-si-api.jitsi.net/jitsi-slack/slack/oauth_redirect"
+    ],
+    "scopes": {
+      "bot": [
+        "chat:write",
+        "commands",
+        "im:write",
+        "users:read"
+      ]
     }
+  },
+  "settings": {
+    "event_subscriptions": {
+      "request_url": "https://beta-meet-jit-si-api.jitsi.net/jitsi-slack/slack/events",
+      "bot_events": [
+        "app_uninstalled",
+        "tokens_revoked"
+      ]
+    },
+    "interactivity": {
+      "is_enabled": true,
+      "request_url": "https://beta-meet-jit-si-api.jitsi.net/jitsi-slack/slack/events"
+    },
+    "org_deploy_enabled": false,
+    "socket_mode_enabled": false,
+    "token_rotation_enabled": false
+  }
 }

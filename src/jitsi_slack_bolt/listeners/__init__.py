@@ -12,3 +12,9 @@ def register_listeners(
             jitsi_callback(ack, client, command, default_server, logger, respond, workspace_store)
         )
     )
+
+    app.action("button")(
+        lambda ack: (
+            ack()
+        )
+    )

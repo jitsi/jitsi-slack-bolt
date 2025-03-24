@@ -56,6 +56,7 @@ def build_join_message_blocks(message: str, room_url: str) -> list[dict[str, any
                     "text": {"type": "plain_text", "text": "Join"},
                     "style": "primary",
                     "value": f"{room_url}",
+                    "action_id": "join_button",
                 }
             ],
         },

@@ -13,7 +13,7 @@ def register_listeners(
         )
     )
 
-    app.action("button")(
+    app.action("join_button")(
         lambda ack: (
             ack()
         )

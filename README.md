@@ -100,6 +100,11 @@ Deploy a container for integration testing.
 
 The `build.sh` script handles building a container.
 
+## TODO
+
+There is some work to do to make postgres connections work properly if more than one gunicorn worker
+is used.
+
 ## License
 
 This project is licensed under the Apache 2.0 License [LICENSE](LICENSE)

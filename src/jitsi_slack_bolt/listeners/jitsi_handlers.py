@@ -72,9 +72,7 @@ def slash_jitsi(
 ):
     """base slash command that creates a randomly generated Jitsi room name in the server's path"""
 
-    logger.info(f"Creating Jitsi room for team {command['team_id']}")
-    logger.info(f"{workspace_store}")
-    logger.info(f"Server URL: {workspace_store.get_workspace_server_url(command['team_id'])}")
+    logger.debug(f"Creating Jitsi room for team {command['team_id']}")
 
     server_url, room_url = build_room_url(command, workspace_store)
     msg_blocks = build_join_message_blocks(f"A Jitsi meeting has started at {server_url}", room_url)

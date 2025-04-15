@@ -193,7 +193,7 @@ def slash_jitsi_help(respond: Respond, workspace_store: WorkspaceStore):
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": f"• `/jitsi` creates a new conference link in the current channel\n•`/jitsi [@user1 @user2 ...]` sends direct messages to user1 and user2 to join a new conference.\n•`/jitsi server default` will set the server used for conferences to the default ({default_server}).\n•`/jitsi server https://foo.com/` will set the server used for conferences to https://foo.com/. You can use this to point this bot at your own jitsi server.",
+                    "text": f"• `/jitsi` creates a new conference link in the current channel\n•`/jitsi [@user1 @user2 ...]` sends direct messages to user1 and user2 to join a new conference.\n•`/jitsi server default` will set the server used for conferences to the default ({default_server_url}).\n•`/jitsi server https://foo.com/` will set the server used for conferences to https://foo.com/. You can use this to point this bot at your own jitsi server.",
                 },
             },
         ]

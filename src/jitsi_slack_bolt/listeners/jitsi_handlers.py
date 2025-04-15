@@ -177,8 +177,9 @@ def slash_jitsi_dm(
     respond(blocks=msg_blocks)
 
 
-def slash_jitsi_help(respond: Respond, default_server: str):
+def slash_jitsi_help(respond: Respond, workspace_store: WorkspaceStore):
     """slash command that provides help for the /jitsi command"""
+    default_server_url = workspace_store.get_workspace_server_url("default")
     respond(
         blocks=[
             {

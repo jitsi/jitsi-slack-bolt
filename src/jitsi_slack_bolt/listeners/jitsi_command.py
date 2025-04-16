@@ -39,6 +39,7 @@ def jitsi_callback(
     command: dict[str, any],
     logger: Logger,
     respond: Respond,
+    slash_cmd: str,
     workspace_store: WorkspaceStore,
 ):
     ack()
@@ -48,6 +49,6 @@ def jitsi_callback(
     elif command["text"].startswith("@"):
         slash_jitsi_dm(client, command, logger, respond, workspace_store)
     elif command["text"].startswith("help"):
-        slash_jitsi_help(respond, workspace_store)
+        slash_jitsi_help(respond, slash_cmd, workspace_store)
     else:
         slash_jitsi(command, logger, respond, workspace_store)

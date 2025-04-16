@@ -177,7 +177,7 @@ def slash_jitsi_dm(
     respond(blocks=msg_blocks)
 
 
-def slash_jitsi_help(respond: Respond, workspace_store: WorkspaceStore):
+def slash_jitsi_help(respond: Respond, slash_cmd: str, workspace_store: WorkspaceStore):
     """slash command that provides help for the /jitsi command"""
     default_server_url = workspace_store.get_workspace_server_url("default")
     respond(
@@ -186,14 +186,14 @@ def slash_jitsi_help(respond: Respond, workspace_store: WorkspaceStore):
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": "Welcome to the /jitsi bot! Here's what you can do:",
+                    "text": "Welcome to the {slash_cmd} bot! Here's what you can do:",
                 },
             },
             {
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": f"• `/jitsi` creates a new conference link in the current channel\n•`/jitsi [@user1 @user2 ...]` sends direct messages to user1 and user2 to join a new conference.\n•`/jitsi server default` will set the server used for conferences to the default ({default_server_url}).\n•`/jitsi server https://foo.com/` will set the server used for conferences to https://foo.com/. You can use this to point this bot at your own jitsi server.",
+                    "text": f"• `{slash_cmd}` creates a new conference link in the current channel\n•`{slash_cmd} [@user1 @user2 ...]` sends direct messages to user1 and user2 to join a new conference.\n•`{slash_cmd} server default` will set the server used for conferences to the default ({default_server_url}).\n•`{slash_cmd} server https://foo.com/` will set the server used for conferences to https://foo.com/. You can use this to point this bot at your own jitsi server.",
                 },
             },
         ]

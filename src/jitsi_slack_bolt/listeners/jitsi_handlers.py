@@ -106,9 +106,11 @@ def slash_jitsi_server(
                     "Invalid format for a server URL - must include scheme (e.g., https://) and hostname"
                 )
                 return
-            url = urljoin(decomp[1], "/")
-            workspace_store.set_workspace_server_url(command["team_id"], url)
-            respond(f"Your team's conferences will be hosted at: {url}")
+            server_url = f"{parsed_url.scheme}://{parsed_url.netloc}{parsed_url.path}"
+            if not server_url.endswith('/'):
+                server_url += '/'
+            workspace_store.set_workspace_server_url(command["team_id"], server_url)
+            respond(f"Your team's conferences will be hosted at: {server_url}")
             return
     respond("usage: /jitsi server [default|<server>]")
 

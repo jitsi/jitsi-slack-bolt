@@ -39,7 +39,7 @@ This is a [python](https://python.org) 3 project which, leverags the
 Service endpoints are handled by [flask](https://flask.palletsprojects.com/en/stable/)
 and run within the [gunicorn](https://gunicorn.org) wsgi server.
 
-Current development uses python 3.12.9. There is no support for python 2.
+Current development uses python 3.12.10. There is no support for python 2.
 
 Dependency management uses [poetry](https://python-poetry.org); use `poetry install` to install
 all required libraries for development.

@@ -46,7 +46,7 @@ export PROMETHEUS_MULTIPROC_DIR=/tmp
 cd src/jitsi_slack_bolt
 
 if [ -n "$DEBUG_LEVEL" ] && [ "$DEBUG_LEVEL" = "debug" ]; then
-    gunicorn --config guincorn-config.py --reload app:app
+    gunicorn --config gunicorn-config.py --reload app:app
 else
     gunicorn --config gunicorn-config.py app:app
 fi

@@ -32,7 +32,7 @@ with OAUTH.
 
 ### Python
 
-This is a [python](https://python.org) 3 project which, leverags the
+This is a [python3](https://python.org) project which, leverages the
 [Slack python sdk](https://tools.slack.dev/python-slack-sdk/) and the
 [Slack bolt sdk](https://tools.slack.dev/bolt-python/).
 
@@ -75,7 +75,6 @@ The following environment variables configure the service:
 * `VAULT_TOKEN`: token for vault access
 * `VAULT_MOUNT_POINT`: mount point for secrets
 * `VAULT_PATH_PREFIX`: prefix for jitsi-slack k-v store
-
 
 #### data store configuration - postgres
 

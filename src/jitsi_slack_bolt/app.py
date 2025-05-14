@@ -59,7 +59,7 @@ class JitsiSlackApp:
         self.logger.info("starting jitsi-slack")
 
         self.logger.info(
-            f"initializing workspace store with default server: {self.config.default_server}"
+            f"initializing workspace store with default server: {self.config.default_server_url}"
         )
 
         self.workspace_store = WorkspaceStore()
@@ -92,7 +92,7 @@ class JitsiSlackApp:
         else:
             raise ValueError(f"Invalid storage provider: {self.config.data_store_provider}")
 
-        self.workspace_store.set_workspace_server_url("default", self.config.default_server)
+        self.workspace_store.set_workspace_server_url("default", self.config.default_server_url)
 
         self.logger.info(f"initializing bolt app in {self.config.slack_app_mode} mode")
         if self.config.slack_app_mode == "socket":

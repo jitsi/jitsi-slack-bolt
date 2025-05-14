@@ -17,7 +17,7 @@ class JitsiConfiguration:
 
     data_store_provider: StorageType
     debug_level: str
-    default_server: str
+    default_server_url: str
     slack_app_mode: str
     slash_cmd: str
     metrics_port: str
@@ -49,7 +49,7 @@ class JitsiConfiguration:
         config = cls(
             data_store_provider=provider,
             debug_level=debug_level,
-            default_server=os.environ.get("JITSI_DEFAULT_SERVER", "https://meet.jit.si"),
+            default_server_url=os.environ.get("JITSI_DEFAULT_SERVER_URL", "https://meet.jit.si/"),
             slack_app_mode=os.environ.get("SLACK_EVENTS_API_MODE", "socket"),
             slash_cmd=os.environ.get("SLACK_SLASH_CMD", "/jitsi"),
             metrics_port=os.environ.get("METRICS_PORT", "8080"),

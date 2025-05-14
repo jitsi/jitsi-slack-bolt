@@ -15,7 +15,7 @@ which is now deprecated because it does not support all modern Slack standards.
 
 * `/jitsi` creates a Jitsi room with a random name
 * `/jitsi server` shows the current server configuration for the workspace
-* `/jitsi server default` resets server to default - `JITSI_DEFAULT_SERVER`
+* `/jitsi server default` resets server url to default - `JITSI_DEFAULT_SERVER_URL`
 * `/jitsi server <url>` : Sets custom default server URL for the workspace
 * `/jitsi @<user1> .. @<userN>` ceates a Jitsi room and sends it via DM
 

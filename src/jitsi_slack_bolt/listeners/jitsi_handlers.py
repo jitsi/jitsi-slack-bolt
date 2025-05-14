@@ -27,14 +27,22 @@ from slack_sdk.errors import SlackApiError
 from slack_sdk.http_retry.builtin_handlers import RateLimitErrorRetryHandler
 from ..util.store import WorkspaceStore
 from jitsi_slack_bolt.util.room_name import generate_room_name
-from urllib.parse import urlparse, urljoin
+from urllib.parse import quote
+from urllib.parse import urljoin
+from urllib.parse import urlparse
 
 
-def build_room_url(command: dict[str, any], workspace_store: WorkspaceStore) -> str:
+def build_room_url(command: dict[str, any], workspace_store: WorkspaceStore, room_str: str = None) -> str:
+    """builds a Jitsi room URL based on workspace's server URL and either a random or deterministic room name"""
     server_url = workspace_store.get_workspace_server_url(
         command["team_id"]
     ) or workspace_store.get_workspace_server_url(command["default"])
-    room_name = generate_room_name()
+    if not room_str:
+        # generate random room name
+        room_name = generate_room_name()
+    else:
+        # sanatize room name
+        room_name = quote(room_str)
     room_url = f"{server_url}/{room_name}"
     return server_url, room_url
 
@@ -70,11 +78,15 @@ def slash_jitsi(
     respond: Respond,
     workspace_store: WorkspaceStore,
 ):
-    """base slash command that creates a randomly generated Jitsi room name in the server's path"""
-
+    """base slash command that creates a URL for a Jitsi room"""
     logger.debug(f"Creating Jitsi room for team {command['team_id']}")
 
-    server_url, room_url = build_room_url(command, workspace_store)
+    decomp = command["text"].split(" ")
+    if len(decomp) == 1:
+        server_url, room_url = build_room_url(command, workspace_store)
+    else:
+        server_url, room_url = build_room_url(command, workspace_store, room_str=decomp[2])
+
     msg_blocks = build_join_message_blocks(f"A Jitsi meeting has started at {server_url}", room_url)
     respond(blocks=msg_blocks, response_type="in_channel")
 
@@ -95,9 +107,9 @@ def slash_jitsi_server(
 
     if len(decomp) == 2:
         if decomp[1] == "default":
-            default_server = workspace_store.get_workspace_server_url("default")
-            workspace_store.set_workspace_server_url(command["team_id"], default_server)
-            respond(f"Your team's conference URL has been set to the default: {default_server}")
+            default_server_url = workspace_store.get_workspace_server_url("default")
+            workspace_store.set_workspace_server_url(command["team_id"], default_server_url)
+            respond(f"Your team's conference URL has been set to the default: {default_server_url}")
             return
         else:
             parsed_url = urlparse(decomp[1])
@@ -195,7 +207,7 @@ def slash_jitsi_help(respond: Respond, slash_cmd: str, workspace_store: Workspac
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": f"• `{slash_cmd}` creates a new conference link in the current channel\n•`{slash_cmd} [@user1 @user2 ...]` sends direct messages to user1 and user2 to join a new conference.\n•`{slash_cmd} server default` will set the server used for conferences to the default ({default_server_url}).\n•`{slash_cmd} server https://foo.com/` will set the server used for conferences to https://foo.com/. You can use this to point this bot at your own jitsi server.",
+                    "text": f"• `{slash_cmd}` creates a new conference link in the current channel using a randomized room name\n• `{slash_cmd} <room_name>` creates a new conference link in the current channel with the specified room name•`{slash_cmd} [@user1 @user2 ...]` sends direct messages to user1 and user2 to join a new conference.\n•`{slash_cmd} server default` will set the server used for conferences to the default ({default_server_url}).\n•`{slash_cmd} server https://foo.com/bar/` will set the base url used for conferences to https://foo.com/bar/. You can use this to point this bot at your own jitsi server.",
                 },
             },
         ]

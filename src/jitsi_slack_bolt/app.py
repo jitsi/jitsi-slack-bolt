@@ -135,7 +135,9 @@ class JitsiSlackApp:
                 self.workspace_store.delete_workspace(event["team_id"])
 
         self.logger.info(f"registering bolt listeners for {self.config.slash_cmd}")
-        register_listeners(self.bolt_app, self.workspace_store, self.config.slash_cmd)
+        register_listeners(
+            self.bolt_app, self.workspace_store, self.config.slash_cmd
+        )
 
         if self.config.slack_app_mode == "oauth":
             self.init_flask_app()

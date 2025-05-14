@@ -79,7 +79,7 @@ def slash_jitsi(
     workspace_store: WorkspaceStore,
 ):
     """base slash command that creates a URL for a Jitsi room"""
-    logger.debug(f"Creating Jitsi room for team {command['team_id']}")
+    logger.debug(f"Creating Jitsi room for team {command['team_id']} with {command['text']}")
 
     decomp = command["text"].split(" ")
     if len(decomp) == 1:

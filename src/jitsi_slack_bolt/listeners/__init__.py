@@ -7,7 +7,7 @@ def register_listeners(app: App, workspace_store: WorkspaceStore, slash_cmd: str
     """Register all command listeners with the Bolt app."""
     app.command(slash_cmd)(
         lambda ack, client, command, logger, respond: (
-            jitsi_callback(ack, client, command, logger, respond, workspace_store)
+            jitsi_callback(ack, client, command, logger, respond, slash_cmd, workspace_store)
         )
     )
 

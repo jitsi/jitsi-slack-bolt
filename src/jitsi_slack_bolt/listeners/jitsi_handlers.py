@@ -32,16 +32,17 @@ from urllib.parse import urljoin
 from urllib.parse import urlparse
 
 
-def build_room_url(command: dict[str, any], workspace_store: WorkspaceStore, room_str=None) -> str:
+#def build_room_url(command: dict[str, any], workspace_store: WorkspaceStore, room_str=None) -> tuple[str, str]:
+def build_room_url(command, workspace_store, room_str=None):
     """builds a Jitsi room URL based on workspace's server URL and either a random or deterministic room name"""
     server_url = workspace_store.get_workspace_server_url(
         command["team_id"]
-    ) or workspace_store.get_workspace_server_url(command["default"])
+    ) or workspace_store.get_workspace_server_url("default")
     if not room_str:
         # generate random room name
         room_name = generate_room_name()
     else:
-        # sanatize room name
+        # sanitize room name
         room_name = quote(room_str)
     room_url = f"{server_url}/{room_name}"
     return server_url, room_url

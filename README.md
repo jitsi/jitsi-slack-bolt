@@ -50,7 +50,7 @@ The following environment variables configure the service:
 
 #### general
 
-* `JITSI_DEFAULT_SERVER`: the base URL for the server, e.g., `https://meet.jit.si/`
+* `JITSI_DEFAULT_SERVER_URL`: the base URL for the server, e.g., `https://meet.jit.si/`
 * `SLACK_EVENTS_API_MODE`: Set to "socket" for socket mode, otherwise uses "oauth" and the Events API
 * `SLACK_SLASH_CMD`: The slash command to call the service in Slack (defaults to /jitsi)
 * `STORAGE_PROVIDER`: "memory", "vault", or "postgres"

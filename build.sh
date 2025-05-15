@@ -2,6 +2,18 @@
 
 echo "starting jitsi-slack image build"
 
+./lint.sh
+if [ $? -ne 0 ]; then
+    echo "linting failed; aborting build"
+    exit 1
+fi
+
+pytest -v --disable-warnings
+if [ $? -ne 0 ]; then
+    echo "unit tests failed; aborting build"
+    exit 1
+fi
+
 if [ -z "$DOCKER_REPO_HOST" ]; then
     echo "Error: DOCKER_REPO_HOST must be defined"
     exit 1

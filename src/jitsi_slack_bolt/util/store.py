@@ -44,7 +44,7 @@ class InMemoryStorageProvider(StorageProvider):
         return self._server_urls.get(workspace_id)
 
     def set_server_url(self, workspace_id: str, server_url: str) -> None:
-        self._server_urls[workspace_id] = server_url.rstrip("/")
+        self._server_urls[workspace_id] = server_url
 
     def delete_workspace(self, workspace_id: str) -> None:
         """Delete all data for a workspace."""

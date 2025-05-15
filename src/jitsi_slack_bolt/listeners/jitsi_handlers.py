@@ -201,7 +201,7 @@ def slash_jitsi_help(respond: Respond, slash_cmd: str, workspace_store: Workspac
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": "Welcome to the {slash_cmd} bot! Here's what you can do:",
+                    "text": f"Welcome to the {slash_cmd} bot! Here's what you can do:",
                 },
             },
             {

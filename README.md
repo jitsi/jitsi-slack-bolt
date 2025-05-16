@@ -28,7 +28,8 @@ This project is based on the Slack's Bolt library for Python which has an
 
 To run your own version of this service, you will need to follow the guide to set up your own Slack
 app. We recommend you begin in socket mode for development since it is easy to step on your own foot
-with OAUTH.
+with OAUTH. If you do not plan to deploy a service that connects to more than one workspace, you can
+use socket mode indefinitely.
 
 ### Python
 

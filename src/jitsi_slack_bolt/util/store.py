@@ -55,12 +55,16 @@ class InMemoryStorageProvider(StorageProvider):
 class WorkspaceStore:
     """Storage utility for workspace-specific settings."""
 
-    _instance = None
-    _provider: StorageProvider = InMemoryStorageProvider()
+    def __init__(self, provider: StorageProvider = None) -> None:
+        """Initialize the workspace store with a storage provider."""
+        if provider is None:
+            self._provider = InMemoryStorageProvider()
+        else:
+            self._provider = provider
 
-    def set_provider(cls, provider: StorageProvider) -> None:
+    def set_provider(self, provider: StorageProvider) -> None:
         """Set the storage provider to use."""
-        cls._provider = provider
+        self._provider = provider
 
     def get_workspace_oauth(self, workspace_id: str) -> Optional[str]:
         """Get OAuth token for a workspace."""
@@ -70,7 +74,7 @@ class WorkspaceStore:
         """Store OAuth token for a workspace."""
         self._provider.set_oauth(workspace_id, oauth_token)
 
-    def get_workspace_server_url(self, workspace_id: str) -> str:
+    def get_workspace_server_url(self, workspace_id: str) -> Optional[str]:
         """Get Jitsi server URL for a workspace."""
         return self._provider.get_server_url(workspace_id) or self._provider.get_server_url(
             "default"
@@ -78,6 +82,8 @@ class WorkspaceStore:
 
     def set_workspace_server_url(self, workspace_id: str, server_url: str) -> None:
         """Set Jitsi server URL for a workspace."""
+        if not server_url.endswith("/"):
+            server_url = server_url + "/"
         self._provider.set_server_url(workspace_id, server_url)
 
     def delete_workspace(self, workspace_id: str) -> None:

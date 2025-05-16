@@ -27,6 +27,7 @@ from slack_sdk.errors import SlackApiError
 from slack_sdk.http_retry.builtin_handlers import RateLimitErrorRetryHandler
 from ..util.store import WorkspaceStore
 from ..util.room_name import generate_room_name
+from ..util import build_join_message_blocks, build_help_message_blocks
 from urllib.parse import quote
 from urllib.parse import urljoin
 from urllib.parse import urlparse
@@ -52,31 +53,6 @@ def build_room_url(
     return server_url, room_url
 
 
-def build_join_message_blocks(message: str, room_url: str) -> List[Dict[str, Any]]:
-    blocks = [
-        {
-            "type": "section",
-            "text": {
-                "type": "plain_text",
-                "text": f"{message}",
-            },
-        },
-        {
-            "type": "actions",
-            "elements": [
-                {
-                    "type": "button",
-                    "text": {"type": "plain_text", "text": "Click to Join"},
-                    "style": "primary",
-                    "url": f"{room_url}",
-                    "action_id": "join_button",
-                }
-            ],
-        },
-    ]
-    return blocks
-
-
 def slash_jitsi(
     command: Dict[str, Any],
     logger: Logger,
@@ -92,7 +68,7 @@ def slash_jitsi(
         server_url, room_url = build_room_url(command, workspace_store)
 
     msg_blocks = build_join_message_blocks(f"A Jitsi meeting has started at {server_url}", room_url)
-    respond(blocks=msg_blocks, response_type="in_channel", thread_ts=command.get("thread_ts"))
+    respond(blocks=msg_blocks, response_type="in_channel")
 
 
 def slash_jitsi_server(
@@ -166,7 +142,7 @@ def slash_jitsi_dm(
             return
 
         try:
-            server_url, room_url = build_room_url(command, workspace_store, logger=logger)
+            server_url, room_url = build_room_url(command, workspace_store)
             msg_blocks = build_join_message_blocks(
                 f"<@{command['user_name']}> would like you to join a Jitsi meeting at : {server_url}",
                 room_url,
@@ -198,54 +174,5 @@ def slash_jitsi_dm(
 def slash_jitsi_help(respond: Respond, slash_cmd: str, workspace_store: WorkspaceStore):
     """slash command that provides help for the /jitsi command"""
     default_server_url = workspace_store.get_workspace_server_url("default")
-    respond(
-        blocks=[
-            {
-                "type": "rich_text",
-                "elements": [
-                    {
-                        "type": "rich_text_section",
-                        "elements": [
-                            {
-                                "type": "text",
-                                "text": f"Welcome to the {slash_cmd} bot! Here's what you can do:",
-                                "style": {
-                                    "bold": True,
-                                },
-                            }
-                        ],
-                    },
-                    {
-                        "type": "rich_text_list",
-                        "elements": [
-                            {
-                                "type": "rich_text_section",
-                                "elements": [
-                                    {
-                                        "type": "text",
-                                        "text": f"`{slash_cmd}` creates a new conference link in the current channel using a randomized room name",
-                                    },
-                                    {
-                                        "type": "text",
-                                        "text": f"`{slash_cmd} <room_name>` creates a new conference link in the current channel with the specified room name",
-                                    },
-                                    {
-                                        "type": "text",
-                                        "text": f"`{slash_cmd} [@user1 @user2 ...]` sends direct messages to user1 and user2 to join a new conference.",
-                                    },
-                                    {
-                                        "type": "text",
-                                        "text": f"`{slash_cmd} server default` will set the server used for conferences to the default ({default_server_url}).",
-                                    },
-                                    {
-                                        "type": "text",
-                                        "text": f"`{slash_cmd} server https://foo.com/bar/` will set the base url used for conferences to https://foo.com/bar/. You can use this to point this bot at your own jitsi server.",
-                                    },
-                                ],
-                            }
-                        ],
-                    },
-                ],
-            }
-        ]
-    )
+    help_blocks = build_help_message_blocks(slash_cmd, default_server_url)
+    respond(blocks=help_blocks)

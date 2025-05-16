@@ -1,6 +1,6 @@
 [project]
 name = "jitsi-slack-bolt"
-version = "0.2.2"
+version = "0.2.1"
 description = ""
 authors = [
     {name = "scott boone",email = "scott.e.boone@gmail.com"}

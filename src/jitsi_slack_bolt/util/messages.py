@@ -44,9 +44,7 @@ def build_help_message_blocks(slash_cmd: str, default_server_url: str) -> List[D
                             "elements": [
                                 {
                                     "type": "text",
-                                    "style": {
-                                        "code": True
-                                    },
+                                    "style": {"code": True},
                                     "text": f"{slash_cmd}",
                                 },
                                 {

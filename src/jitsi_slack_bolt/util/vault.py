@@ -72,7 +72,7 @@ class VaultStorageProvider(StorageProvider):
 
     def set_server_url(self, workspace_id: str, server_url: str) -> None:
         """Set Jitsi server URL for a workspace."""
-        self._set_secret(workspace_id, "server_url", server_url.rstrip("/"))
+        self._set_secret(workspace_id, "server_url", server_url)
 
     def delete_workspace(self, workspace_id: str) -> None:
         """Delete all data for a workspace."""

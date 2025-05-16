@@ -62,37 +62,39 @@ class JitsiSlackApp:
             f"initializing workspace store with default server: {self.config.default_server_url}"
         )
 
-        self.workspace_store = WorkspaceStore()
-
         if self.config.data_store_provider == StorageType.MEMORY:
             self.logger.info("initializing memory storage provider")
-            self.workspace_store.set_provider(InMemoryStorageProvider())
+            storage_provider = InMemoryStorageProvider()
         elif self.config.data_store_provider == StorageType.VAULT:
             self.logger.info("initializing vault storage provider")
-            self.workspace_store.set_provider(
-                VaultStorageProvider(
-                    url=self.config.vault_url,
-                    token=self.config.vault_token,
-                    mount_point=self.config.vault_mount_point,
-                    path_prefix=self.config.vault_path_prefix,
-                )
+            storage_provider = VaultStorageProvider(
+                url=self.config.vault_url,
+                token=self.config.vault_token,
+                mount_point=self.config.vault_mount_point,
+                path_prefix=self.config.vault_path_prefix,
             )
         elif self.config.data_store_provider == StorageType.POSTGRES:
             self.logger.info("initializing postgres storage provider")
-            self.workspace_store.set_provider(
-                PostgresStorageProvider(
-                    host=self.config.db_host,
-                    ip=self.config.db_ip,
-                    port=self.config.db_port,
-                    username=self.config.db_username,
-                    password=self.config.db_password,
-                    database_name=self.config.db_name,
-                )
+            storage_provider = PostgresStorageProvider(
+                host=self.config.db_host,
+                ip=self.config.db_ip,
+                port=self.config.db_port,
+                username=self.config.db_username,
+                password=self.config.db_password,
+                database_name=self.config.db_name,
             )
         else:
             raise ValueError(f"Invalid storage provider: {self.config.data_store_provider}")
 
-        self.workspace_store.set_workspace_server_url("default", self.config.default_server_url)
+        self.workspace_store = WorkspaceStore(storage_provider)
+
+        # set default server URL to workspace_store if it isn't already defined
+        default_server = self.workspace_store.get_workspace_server_url("default")
+        if default_server is None or default_server.strip() == "":
+            self.logger.info(f"setting default server URL to {self.config.default_server_url}")
+            self.workspace_store.set_workspace_server_url("default", self.config.default_server_url)
+        else:
+            self.logger.info(f"default server URL already set to {default_server}")
 
         self.logger.info(f"initializing bolt app in {self.config.slack_app_mode} mode")
         if self.config.slack_app_mode == "socket":
@@ -123,7 +125,7 @@ class JitsiSlackApp:
             if "team_id" not in event:
                 logger.warn(f"app_uninstalled event missing team_id: {event}")
             else:
-                logger.info(f"App uninstalled from workspace {event['team_id']}")
+                logger.info(f"app uninstalled from workspace {event['team_id']}")
                 self.workspace_store.delete_workspace(event["team_id"])
 
         @self.bolt_app.event("tokens_revoked")
@@ -131,7 +133,7 @@ class JitsiSlackApp:
             if "team_id" not in event:
                 logger.warn(f"tokens_revoked event missing team_id: {event}")
             else:
-                logger.info(f"Tokens revoked for workspace {event['team_id']}")
+                logger.info(f"tokens revoked for workspace {event['team_id']}")
                 self.workspace_store.delete_workspace(event["team_id"])
 
         self.logger.info(f"registering bolt listeners for {self.config.slash_cmd}")

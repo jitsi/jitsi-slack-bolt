@@ -65,7 +65,7 @@ class PostgresStorageProvider(StorageProvider):
             if not workspace:
                 workspace = WorkspaceData(workspace_id=workspace_id)
                 session.add(workspace)
-            workspace.server_url = server_url.rstrip("/")
+            workspace.server_url = server_url
             session.commit()
 
     def delete_workspace(self, workspace_id: str) -> None:

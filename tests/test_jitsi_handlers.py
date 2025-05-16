@@ -2,10 +2,10 @@ import pytest
 from unittest.mock import MagicMock, patch
 from jitsi_slack_bolt.listeners.jitsi_handlers import (
     build_room_url,
-    build_join_message_blocks,
     slash_jitsi,
     slash_jitsi_server,
 )
+from jitsi_slack_bolt.util import build_join_message_blocks
 
 
 class TestJitsiHandlers:

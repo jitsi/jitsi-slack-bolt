@@ -92,7 +92,7 @@ def slash_jitsi(
         server_url, room_url = build_room_url(command, workspace_store)
 
     msg_blocks = build_join_message_blocks(f"A Jitsi meeting has started at {server_url}", room_url)
-    respond(blocks=msg_blocks, response_type="in_channel")
+    respond(blocks=msg_blocks, response_type="in_channel", thread_ts=command.get("thread_ts"))
 
 
 def slash_jitsi_server(
@@ -201,18 +201,51 @@ def slash_jitsi_help(respond: Respond, slash_cmd: str, workspace_store: Workspac
     respond(
         blocks=[
             {
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": f"Welcome to the {slash_cmd} bot! Here's what you can do:",
-                },
-            },
-            {
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": f"• `{slash_cmd}` creates a new conference link in the current channel using a randomized room name\n• `{slash_cmd} <room_name>` creates a new conference link in the current channel with the specified room name•`{slash_cmd} [@user1 @user2 ...]` sends direct messages to user1 and user2 to join a new conference.\n•`{slash_cmd} server default` will set the server used for conferences to the default ({default_server_url}).\n•`{slash_cmd} server https://foo.com/bar/` will set the base url used for conferences to https://foo.com/bar/. You can use this to point this bot at your own jitsi server.",
-                },
-            },
+                "type": "rich_text",
+                "elements": [
+                    {
+                        "type": "rich_text_section",
+                        "elements": [
+                            {
+                                "type": "text",
+                                "text": f"Welcome to the {slash_cmd} bot! Here's what you can do:",
+                                "style": {
+                                    "bold": True,
+                                },
+                            }
+                        ],
+                    },
+                    {
+                        "type": "rich_text_list",
+                        "elements": [
+                            {
+                                "type": "rich_text_section",
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": f"`{slash_cmd}` creates a new conference link in the current channel using a randomized room name",
+                                    },
+                                    {
+                                        "type": "text",
+                                        "text": f"`{slash_cmd} <room_name>` creates a new conference link in the current channel with the specified room name",
+                                    },
+                                    {
+                                        "type": "text",
+                                        "text": f"`{slash_cmd} [@user1 @user2 ...]` sends direct messages to user1 and user2 to join a new conference.",
+                                    },
+                                    {
+                                        "type": "text",
+                                        "text": f"`{slash_cmd} server default` will set the server used for conferences to the default ({default_server_url}).",
+                                    },
+                                    {
+                                        "type": "text",
+                                        "text": f"`{slash_cmd} server https://foo.com/bar/` will set the base url used for conferences to https://foo.com/bar/. You can use this to point this bot at your own jitsi server.",
+                                    },
+                                ],
+                            }
+                        ],
+                    },
+                ],
+            }
         ]
     )

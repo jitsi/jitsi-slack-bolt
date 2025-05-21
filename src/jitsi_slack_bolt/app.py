@@ -106,7 +106,7 @@ class JitsiSlackApp:
                 oauth_settings=OAuthSettings(
                     client_id=os.environ.get("SLACK_CLIENT_ID"),
                     client_secret=os.environ.get("SLACK_CLIENT_SECRET"),
-                    scopes=["chat:write", "commands", "im:write", "users:read"],
+                    scopes=["chat:write", "commands", "users:read"],
                     user_scopes=[],
                     redirect_uri=None,
                     state_store=WorkspaceInstallationStore(self.workspace_store),

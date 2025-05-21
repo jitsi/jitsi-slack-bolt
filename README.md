@@ -1,7 +1,7 @@
 # Jitsi Slack Bolt - Jitsi Meet Integration for Slack
 
 This is a slack bolt python bolt that provides the backend for a /jitsi bot on your Slack workspace
-to easily invite members to video conferences. It is the service run in support of the TBD LINK app
+to easily invite members to video conferences. It is the service run in support of the ADD LINK HERE app
 in the Slack Marketplace.
 
 Enables starting and joining [Jitsi Meet](https://meet.jit.si) meetings from within
@@ -14,10 +14,11 @@ which is now deprecated because it does not support all modern Slack standards.
 ## Supported slash commands
 
 * `/jitsi` creates a Jitsi room with a random name
-* `/jitsi server` shows the current server configuration for the workspace
+* `/jitsi <roomname>` creates a Jitsi room with using \<roomname\> as a name
+* `/jitsi [@user1 .. @userN]` ceates a Jitsi room and sends it via DM
+* `/jitsi server` shows the current server used by the workspace
 * `/jitsi server default` resets server url to default - `JITSI_DEFAULT_SERVER_URL`
-* `/jitsi server <url>` : Sets custom default server URL for the workspace
-* `/jitsi @<user1> .. @<userN>` ceates a Jitsi room and sends it via DM
+* `/jitsi server <url>` sets a custom default server URL for the workspace
 
 ## Local Development
 
